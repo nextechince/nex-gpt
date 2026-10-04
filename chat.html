@@ -125,6 +125,7 @@ a{color:inherit;text-decoration:none}
 .model-selector:hover{background:var(--bg-input)}
 .model-selector i{font-size:10px;color:var(--text-3)}
 .model-menu{position:absolute;top:44px;left:50%;transform:translateX(-50%);background:#fff;border:1px solid var(--border);border-radius:var(--radius);box-shadow:0 4px 24px rgba(0,0,0,.12);padding:6px;min-width:320px;max-width:90vw;max-height:70vh;overflow-y:auto;z-index:100;animation:pop .12s ease}
+.model-menu.up{top:auto;bottom:calc(100% + 8px)}
 .model-menu-group{padding:8px 12px 4px;font-size:10.5px;font-weight:600;color:var(--text-3);text-transform:uppercase;letter-spacing:.5px}
 .model-menu-item{width:100%;padding:10px 12px;border-radius:8px;text-align:left;display:flex;align-items:flex-start;gap:10px;transition:background var(--t);cursor:pointer}
 .model-menu-item:hover{background:var(--bg-hover)}
@@ -155,12 +156,9 @@ a{color:inherit;text-decoration:none}
 .chip:hover{background:var(--bg-hover);color:var(--text);border-color:var(--border)}
 .chip.active{background:var(--accent);color:var(--accent-fg)}
 .preset-row{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px}
-.msg-row{display:flex;gap:14px;width:100%;animation:fadeIn .2s ease}
+.msg-row{display:flex;width:100%;animation:fadeIn .2s ease}
 .msg-row.user{justify-content:flex-end}
 .msg-row.ai{justify-content:flex-start}
-
-/* FIXED: no avatar, plain text flush left like DeepSeek */
-.ai-content{flex:1;min-width:0;font-size:15px;line-height:1.7;word-wrap:break-word;overflow-wrap:break-word}
 
 .user-bubble{background:var(--user-bubble);color:#fff;padding:11px 16px;border-radius:var(--radius-lg);max-width:75%;font-size:14.5px;line-height:1.6;word-wrap:break-word;white-space:pre-wrap;overflow-wrap:break-word}
 .user-bubble-attachments{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px}
@@ -169,6 +167,8 @@ a{color:inherit;text-decoration:none}
 .user-bubble-attachment-name{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .user-bubble img.user-image{max-width:100%;max-height:300px;border-radius:10px;margin-top:6px;cursor:pointer}
 
+/* NO AVATAR — clean AI text, flush left */
+.ai-content{flex:1;min-width:0;font-size:15px;line-height:1.7;word-wrap:break-word;overflow-wrap:break-word}
 .ai-content p{margin:0 0 12px}
 .ai-content p:last-child{margin-bottom:0}
 .ai-content h1,.ai-content h2,.ai-content h3{font-weight:700;letter-spacing:-.3px;margin:18px 0 10px;line-height:1.35}
@@ -218,6 +218,13 @@ a{color:inherit;text-decoration:none}
 .input-inner{max-width:768px;margin:0 auto}
 .web-pill{display:inline-flex;align-items:center;gap:6px;padding:4px 10px;border-radius:var(--radius-pill);background:var(--bg-input);color:var(--text);font-size:12px;font-weight:600;margin-bottom:8px}
 .web-pill i{font-size:11px}
+
+/* Model picker pill above input */
+.input-model-row{display:flex;align-items:center;margin-bottom:8px;position:relative}
+.input-model-pill{display:inline-flex;align-items:center;gap:6px;padding:5px 12px;border-radius:var(--radius-pill);background:var(--bg-input);color:var(--text);font-size:12.5px;font-weight:600;transition:background var(--t);letter-spacing:-.2px}
+.input-model-pill:hover{background:var(--bg-hover)}
+.input-model-pill i{font-size:10px;color:var(--text-3)}
+
 .attach-tray{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:8px}
 .attach-item{position:relative;display:flex;align-items:center;gap:8px;padding:6px 10px 6px 6px;border-radius:10px;background:var(--bg-input);font-size:12px;max-width:200px}
 .attach-item.thumbnail{padding:4px}
@@ -389,7 +396,7 @@ a{color:inherit;text-decoration:none}
       </div>
       <div id="guestBanner" class="guest-banner hidden">
         <i class="fa-solid fa-circle-info"></i>
-        <div class="guest-banner-text"><strong>You're a guest</strong><span id="guestBannerMsg">Sign in to save your chats.</span></div>
+        <div class="guest-banner-text"><strong>You're a guest</strong><span id="guestBannerMsg">Sign in to save your chats forever.</span></div>
         <button type="button" id="guestBannerSignin" style="padding:6px 12px;font-size:12px;border-radius:8px;background:#1a1a1e;color:#fff;font-weight:600">Sign in</button>
       </div>
       <nav class="chat-list" id="chatList"></nav>
@@ -435,6 +442,17 @@ a{color:inherit;text-decoration:none}
 
       <div class="input-area">
         <div class="input-inner">
+
+          <!-- Model picker pill above input -->
+          <div class="input-model-row">
+            <button type="button" class="input-model-pill" id="inputModelBtn">
+              <i class="fa-solid fa-bolt"></i>
+              <span id="inputModelLabel">Auto (Free Router)</span>
+              <i class="fa-solid fa-chevron-up"></i>
+            </button>
+            <div class="model-menu hidden" id="inputModelMenu"></div>
+          </div>
+
           <div class="attach-tray hidden" id="attachTray"></div>
           <div class="web-pill hidden" id="webPill"><i class="fa-solid fa-globe"></i><span>Web</span></div>
           <div class="input-box">
@@ -482,16 +500,6 @@ a{color:inherit;text-decoration:none}
           <button type="button" class="accent-dot" data-accent="emerald" title="Emerald"></button>
           <button type="button" class="accent-dot" data-accent="rose" title="Rose"></button>
           <button type="button" class="accent-dot" data-accent="amber" title="Amber"></button>
-        </div>
-      </section>
-      <section class="settings-section">
-        <h4>System prompt</h4>
-        <div class="preset-row" id="presetRow">
-          <button type="button" class="chip" data-preset="default">Default</button>
-          <button type="button" class="chip" data-preset="coder">Coder</button>
-          <button type="button" class="chip" data-preset="writer">Writer</button>
-          <button type="button" class="chip" data-preset="teacher">Teacher</button>
-          <button type="button" class="chip" data-preset="concise">Concise</button>
         </div>
       </section>
       <section class="settings-section">
@@ -562,6 +570,9 @@ import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/fireba
 import { getAuth, onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
 import { getFirestore, doc, setDoc, getDoc, collection, query, orderBy, onSnapshot, updateDoc, deleteDoc, getDocs, serverTimestamp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
 
+/* ============================================================
+   HARDCODED CONFIG
+   ============================================================ */
 const firebaseConfig = {
   apiKey: "AIzaSyAcg4uh4lqOJ8pwUDmDppyyrmOB9Mv4YZA",
   authDomain: "nexgpt-8249a.firebaseapp.com",
@@ -571,7 +582,7 @@ const firebaseConfig = {
   appId: "1:619126243121:web:47c46e57498d67ff107a10"
 };
 
-// ⚠️ REPLACE with your real OpenRouter key locally
+// ⚠️ Replace this with your real OpenRouter key locally — never commit the real one
 const OPENROUTER_KEY = "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";
 
 const app = initializeApp(firebaseConfig);
@@ -584,19 +595,8 @@ const GUEST_MODEL_ID = 'openrouter/free';
 const MAX_FILES = 15;
 const MAX_FILE_BYTES = 10 * 1024 * 1024;
 
-const DEFAULT_SYSTEM_PROMPT = "You are NEXGPT, an advanced AI assistant powered by Aura Tech and created by Next Tech Inc. You are helpful, harmless, honest, and thorough. Make sure to always keep user busy, always give suggestions. You write, debug, and explain code in any language, always wrapping code in triple backticks with the language tag. You format responses with markdown. You are direct, clear, and avoid filler. Admit uncertainty when you are unsure. When web search is enabled, acknowledge that you are providing current information.";
+const DEFAULT_SYSTEM_PROMPT = "You are NEXGPT, an advanced AI assistant powered by Nex Tech. You are helpful, harmless, honest, and thorough. Always Give suggestions in replies. You write, debug, and explain code in any language, always wrapping code in triple backticks with the language tag. You format responses with markdown. You are direct, clear, and avoid filler. Admit uncertainty when you are unsure. When web search is enabled, acknowledge that you are providing current information.";
 
-const SYSTEM_PRESETS = {
-  default: DEFAULT_SYSTEM_PROMPT,
-  coder: "You are NEXGPT in Coder mode. You write clean, production-quality code with error handling, types where applicable, and concise explanations. Always wrap code in triple backticks with the language tag. Prefer modern idioms. Point out bugs and edge cases. Be direct.",
-  writer: "You are NEXGPT in Writer mode. You craft clear, evocative prose. You adapt tone to the request — formal, casual, poetic, technical. You avoid clichés and filler. You favor strong verbs and concrete nouns.",
-  teacher: "You are NEXGPT in Teacher mode. You explain concepts step by step, from first principles, using analogies and examples. You check understanding by asking short follow-up questions. You never talk down to the learner.",
-  concise: "You are NEXGPT in Concise mode. You answer in the fewest words possible without losing accuracy. No preamble, no disclaimers, no filler. Use bullet points when helpful. If a one-word answer will do, give a one-word answer."
-};
-
-/* ============================================================
-   MODELS — the ones you added from OpenRouter
-   ============================================================ */
 const MODELS = [
   { id: 'apodex/apodex-1.1-mini:free', name: 'Apodex 1.1', desc: 'Reliable general-purpose model.', badges: ['free','fast'], vision: false, audio: false },
   { id: 'qwen/qwen3.8-27b:free', name: 'Qwen3 Coder 27B', desc: 'Frontier coding model. 262K context.', badges: ['free','fast'], vision: false, audio: false },
@@ -613,7 +613,6 @@ const state = {
   activeModelId: 'openrouter/free', streaming: false, abortController: null,
   attachments: [], webSearch: false, unsubscribeChats: null, searchQuery: '',
   settings: {
-    systemPrompt: DEFAULT_SYSTEM_PROMPT, preset: 'default',
     temperature: 0.7, maxTokens: 2048, accent: 'default',
     autoTTS: false, voiceURI: ''
   }
@@ -649,7 +648,7 @@ function applyAccent(accent) {
 }
 
 /* ============================================================
-   AUTH STATE — splash hides even if profile load fails
+   AUTH STATE — splash always hides
    ============================================================ */
 function onUserChanged(user) {
   if (state.unsubscribeChats) { state.unsubscribeChats(); state.unsubscribeChats = null; }
@@ -657,6 +656,7 @@ function onUserChanged(user) {
   state.isGuest = !!(user && user.isAnonymous);
   if (!user) { window.location.replace('./login.html'); return; }
 
+  // Always show main UI first
   $('splash').classList.add('hidden');
   $('main').classList.remove('hidden');
   renderUserCard();
@@ -864,43 +864,71 @@ function colorFromString(s) {
   return `hsl(${hue}, 60%, 45%)`;
 }
 
-function renderModelMenu() {
-  const menu = $('modelMenu');
-  menu.innerHTML = '';
-  menu.appendChild(el('div', 'model-menu-group', state.isGuest ? 'Available to guests' : 'Free models'));
+/* ============================================================
+   MODEL MENUS — header + input pill
+   ============================================================ */
+function buildModelMenuHTML() {
   const available = state.isGuest ? MODELS.filter(m => m.id === GUEST_MODEL_ID) : MODELS;
+  let html = `<div class="model-menu-group">${state.isGuest ? 'Available to guests' : 'Free models'}</div>`;
   available.forEach(m => {
-    const item = el('button', 'model-menu-item' + (m.id === state.activeModelId ? ' selected' : ''));
     const badges = m.badges.map(b => {
       const label = b === 'free' ? 'FREE' : b === 'vision' ? 'VISION' : b === 'reason' ? 'REASON' : b === 'fast' ? 'FAST' : b === 'audio' ? 'AUDIO' : b.toUpperCase();
       return `<span class="model-item-badge ${b}">${label}</span>`;
     }).join('');
-    item.innerHTML = `
-      <div class="model-item-body">
-        <div class="model-item-name">${esc(m.name)} ${badges}</div>
-        <div class="model-item-desc">${esc(m.desc)}</div>
-      </div>
-      <i class="fa-solid fa-check model-item-check"></i>
+    const selected = m.id === state.activeModelId ? ' selected' : '';
+    html += `
+      <button type="button" class="model-menu-item${selected}" data-model-id="${esc(m.id)}">
+        <div class="model-item-body">
+          <div class="model-item-name">${esc(m.name)} ${badges}</div>
+          <div class="model-item-desc">${esc(m.desc)}</div>
+        </div>
+        <i class="fa-solid fa-check model-item-check"></i>
+      </button>
     `;
-    item.addEventListener('click', () => {
-      state.activeModelId = m.id;
-      $('modelLabel').textContent = m.name;
-      const chat = getActiveChat();
-      if (chat) updateChat(chat.id, { model: m.id });
-      menu.classList.add('hidden');
-      toast(`Switched to ${m.name}`);
+  });
+  return html;
+}
+
+function renderModelMenus() {
+  const headerMenu = $('modelMenu');
+  const inputMenu = $('inputModelMenu');
+  const html = buildModelMenuHTML();
+  headerMenu.innerHTML = html;
+  inputMenu.innerHTML = html;
+  [headerMenu, inputMenu].forEach(menu => {
+    menu.querySelectorAll('.model-menu-item').forEach(btn => {
+      btn.addEventListener('click', () => {
+        selectModel(btn.dataset.modelId);
+        menu.classList.add('hidden');
+      });
     });
-    menu.appendChild(item);
   });
 }
 
-function updateModelLabel() {
+function selectModel(id) {
+  const m = MODELS.find(x => x.id === id);
+  if (!m) return;
+  state.activeModelId = id;
+  $('modelLabel').textContent = m.name;
+  $('inputModelLabel').textContent = m.name;
+  const chat = getActiveChat();
+  if (chat) updateChat(chat.id, { model: m.id });
+  renderModelMenus();
+  toast(`Switched to ${m.name}`);
+}
+
+function updateModelLabels() {
   const m = MODELS.find(x => x.id === state.activeModelId);
-  $('modelLabel').textContent = m?.name || 'Auto (Free Router)';
+  const name = m?.name || 'Auto (Free Router)';
+  $('modelLabel').textContent = name;
+  $('inputModelLabel').textContent = name;
 }
 
 function getActiveChat() { return state.chats.find(c => c.id === state.activeChatId) || null; }
 
+/* ============================================================
+   MESSAGES — no robot avatar
+   ============================================================ */
 function renderMessages() {
   const wrap = $('messages');
   wrap.innerHTML = '';
@@ -969,7 +997,6 @@ function buildUserMessage(msg) {
   return row;
 }
 
-/* FIXED: no avatar, plain text column */
 function buildAssistantMessage(msg, idx, chat) {
   const row = el('div', 'msg-row ai');
   const col = el('div');
@@ -1011,7 +1038,6 @@ function makeMsgAction(icon, title, onClick) {
   return b;
 }
 
-/* FIXED: error bubble has no avatar */
 function buildErrorMessage(msg) {
   const row = el('div', 'msg-row ai');
   const col = el('div');
@@ -1118,7 +1144,7 @@ async function handleSend() {
   if (state.isGuest) {
     const used = getGuestCount();
     if (used >= GUEST_MESSAGE_LIMIT) { $('guestLimitModal').classList.remove('hidden'); return; }
-    if (state.activeModelId !== GUEST_MODEL_ID) { state.activeModelId = GUEST_MODEL_ID; updateModelLabel(); }
+    if (state.activeModelId !== GUEST_MODEL_ID) { state.activeModelId = GUEST_MODEL_ID; updateModelLabels(); renderModelMenus(); }
   }
 
   const hasVision = state.attachments.some(a => a.kind === 'image');
@@ -1132,7 +1158,8 @@ async function handleSend() {
       const target = fb || MODELS.find(m => (hasAudio ? m.audio : m.vision));
       if (target) {
         state.activeModelId = target.id;
-        updateModelLabel();
+        updateModelLabels();
+        renderModelMenus();
         toast(`Switched to ${target.name} for the attachment.`);
       } else {
         toast('No model can handle that attachment.', 'error');
@@ -1244,7 +1271,7 @@ async function streamAssistant(chatId) {
 }
 
 function buildApiMessages(history, currentAssistant) {
-  const sys = { role: 'system', content: state.settings.systemPrompt + (state.webSearch ? ' The user has enabled web search. When answering, indicate you searched the web and provide the most current answer you can.' : '') };
+  const sys = { role: 'system', content: DEFAULT_SYSTEM_PROMPT + (state.webSearch ? ' The user has enabled web search. When answering, indicate you searched the web and provide the most current answer you can.' : '') };
   const out = [sys];
   for (const m of history) {
     if (m === currentAssistant) continue;
@@ -1596,13 +1623,11 @@ function closeVoiceChat() {
 }
 
 function openSettings() {
-  $('settingsSystemPrompt').value = state.settings.systemPrompt;
   $('settingsTemp').value = state.settings.temperature;
   $('settingsTempVal').textContent = state.settings.temperature.toFixed(1);
   $('settingsMaxTokens').value = state.settings.maxTokens;
   $('settingsMaxTokensVal').textContent = state.settings.maxTokens;
   $('settingsAutoTTS').checked = !!state.settings.autoTTS;
-  $$('#presetRow .chip').forEach(c => c.classList.toggle('active', c.dataset.preset === state.settings.preset));
   applyAccent(state.settings.accent);
   populateVoiceList();
   $('settingsModal').classList.remove('hidden');
@@ -1656,6 +1681,7 @@ document.addEventListener('keydown', e => {
     if (!$('voiceOverlay').classList.contains('hidden')) { closeVoiceChat(); return; }
     $$('.modal-overlay').forEach(m => m.classList.add('hidden'));
     $('modelMenu').classList.add('hidden');
+    $('inputModelMenu').classList.add('hidden');
     $('userPopover').classList.add('hidden');
     return;
   }
@@ -1680,6 +1706,7 @@ function bindEvents() {
   document.addEventListener('click', e => {
     if (!$('userPopover').contains(e.target) && e.target !== $('userCardBtn')) $('userPopover').classList.add('hidden');
     if (!$('modelMenu').contains(e.target) && e.target !== $('modelSelectorBtn')) $('modelMenu').classList.add('hidden');
+    if (!$('inputModelMenu').contains(e.target) && e.target !== $('inputModelBtn')) $('inputModelMenu').classList.add('hidden');
     if (!$('attachMenu').contains(e.target) && e.target !== $('attachBtn')) $('attachMenu').classList.add('hidden');
   });
   $('openSettingsBtn').addEventListener('click', () => { $('userPopover').classList.add('hidden'); openSettings(); });
@@ -1691,6 +1718,7 @@ function bindEvents() {
   $('backdrop').addEventListener('click', closeSidebarMobile);
 
   $('modelSelectorBtn').addEventListener('click', e => { e.stopPropagation(); $('modelMenu').classList.toggle('hidden'); });
+  $('inputModelBtn').addEventListener('click', e => { e.stopPropagation(); $('inputModelMenu').classList.toggle('hidden'); });
   $('copyAllBtn').addEventListener('click', copyAll);
   $('shareBtn').addEventListener('click', shareChat);
 
@@ -1759,17 +1787,6 @@ function bindEvents() {
   $('settingsMaxTokens').addEventListener('input', e => { state.settings.maxTokens = parseInt(e.target.value, 10); $('settingsMaxTokensVal').textContent = state.settings.maxTokens; saveSettings(); });
   $('settingsAutoTTS').addEventListener('change', e => { state.settings.autoTTS = e.target.checked; saveSettings(); });
   $('settingsVoice').addEventListener('change', e => { state.settings.voiceURI = e.target.value; saveSettings(); });
-  $('settingsSystemPrompt').addEventListener('input', e => { state.settings.systemPrompt = e.target.value; state.settings.preset = ''; $$('#presetRow .chip').forEach(c => c.classList.remove('active')); saveSettings(); });
-  $$('#presetRow .chip').forEach(c => {
-    c.addEventListener('click', () => {
-      const p = c.dataset.preset;
-      state.settings.preset = p;
-      state.settings.systemPrompt = SYSTEM_PRESETS[p] || DEFAULT_SYSTEM_PROMPT;
-      $('settingsSystemPrompt').value = state.settings.systemPrompt;
-      $$('#presetRow .chip').forEach(x => x.classList.toggle('active', x === c));
-      saveSettings();
-    });
-  });
   $$('#accentPicker .accent-dot').forEach(d => {
     d.addEventListener('click', () => { state.settings.accent = d.dataset.accent; applyAccent(d.dataset.accent); saveSettings(); });
   });
@@ -1779,8 +1796,8 @@ function bindEvents() {
 function boot() {
   loadSettings();
   bindEvents();
-  renderModelMenu();
-  updateModelLabel();
+  renderModelMenus();
+  updateModelLabels();
   if ('speechSynthesis' in window) {
     window.speechSynthesis.onvoiceschanged = populateVoiceList;
     setTimeout(populateVoiceList, 200);
