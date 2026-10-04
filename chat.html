@@ -5,14 +5,17 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover, interactive-widget=resizes-content" />
 <meta name="theme-color" content="#1a1a1e" />
 <title>NEXGPT</title>
+<link rel="icon" type="image/svg+xml" href="/icon.svg" />
+<link rel="apple-touch-icon" href="/icon.svg" />
+<link rel="manifest" href="/manifest.webmanifest" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+<meta name="apple-mobile-web-app-title" content="NEXGPT" />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
 <style>
-/* ============================================================
-   RESET
-   ============================================================ */
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
 html,body{height:100%;width:100%;overflow:hidden;position:fixed;inset:0;
   font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;
@@ -25,9 +28,6 @@ a{color:inherit;text-decoration:none}
 .hidden{display:none!important}
 .mobile-only{display:none}
 
-/* ============================================================
-   TOKENS
-   ============================================================ */
 :root{
   --bg:#ffffff;--bg-soft:#f9f9fb;--bg-elev:#ffffff;--bg-input:#f5f5f9;
   --bg-code:#1e1e2a;--bg-hover:#f0f0f5;--bg-active:#e6e6ed;
@@ -47,9 +47,6 @@ a{color:inherit;text-decoration:none}
 
 #app{height:100dvh;width:100vw;overflow:hidden;position:relative}
 
-/* ============================================================
-   SPLASH
-   ============================================================ */
 .splash-screen{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:var(--bg);z-index:999}
 .splash-inner{display:flex;flex-direction:column;align-items:center;gap:16px}
 .splash-logo{width:64px;height:64px;border-radius:18px;background:var(--text);color:#fff;display:flex;align-items:center;justify-content:center;font-size:28px}
@@ -62,14 +59,8 @@ a{color:inherit;text-decoration:none}
 @keyframes fadeIn{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
 @keyframes pop{from{opacity:0;transform:scale(.97)}to{opacity:1;transform:scale(1)}}
 
-/* ============================================================
-   APP SHELL
-   ============================================================ */
 .app-shell{display:flex;height:100%;width:100%;overflow:hidden}
 
-/* ============================================================
-   SIDEBAR
-   ============================================================ */
 .sidebar{width:var(--sidebar-w);min-width:var(--sidebar-w);height:100%;background:var(--bg-soft);
   border-right:1px solid var(--border-soft);display:flex;flex-direction:column;z-index:50;transition:transform var(--t)}
 .sidebar-top{display:flex;align-items:center;justify-content:space-between;padding:16px 16px 12px;height:var(--header-h);flex-shrink:0}
@@ -123,15 +114,9 @@ a{color:inherit;text-decoration:none}
 .popover-item.danger:hover{background:var(--danger-soft)}
 .popover-sep{height:1px;background:var(--border-soft);margin:4px 6px}
 
-/* ============================================================
-   BACKDROP
-   ============================================================ */
 .backdrop{display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:40;opacity:0;transition:opacity .2s ease}
 .backdrop.show{display:block;opacity:1}
 
-/* ============================================================
-   MAIN PANEL
-   ============================================================ */
 .main-panel{flex:1;display:flex;flex-direction:column;height:100%;min-width:0;background:var(--bg);position:relative;overflow:hidden}
 .header{height:var(--header-h);min-height:var(--header-h);display:flex;align-items:center;gap:12px;padding:0 20px;background:var(--bg);border-bottom:1px solid var(--border-soft);z-index:10;flex-shrink:0}
 .mobile-menu-btn{display:none}
@@ -157,9 +142,6 @@ a{color:inherit;text-decoration:none}
 .model-menu-item.selected .model-item-check{opacity:1}
 .header-right{display:flex;align-items:center;gap:4px;flex-shrink:0}
 
-/* ============================================================
-   MESSAGES
-   ============================================================ */
 .messages-wrap{flex:1;overflow-y:auto;scrollbar-width:thin;scrollbar-color:var(--border-strong) transparent;-webkit-overflow-scrolling:touch}
 .messages-wrap::-webkit-scrollbar{width:6px}
 .messages-wrap::-webkit-scrollbar-thumb{background:var(--border-strong);border-radius:6px}
@@ -226,15 +208,9 @@ a{color:inherit;text-decoration:none}
 .typing-indicator span:nth-child(2){animation-delay:.2s}
 .typing-indicator span:nth-child(3){animation-delay:.4s}
 
-/* ============================================================
-   SCROLL BOTTOM
-   ============================================================ */
 .scroll-bottom{position:absolute;bottom:140px;left:50%;transform:translateX(-50%);width:38px;height:38px;border-radius:50%;background:#fff;border:1px solid var(--border);box-shadow:0 4px 12px rgba(0,0,0,.08);color:var(--text-2);display:flex;align-items:center;justify-content:center;font-size:14px;z-index:20;transition:transform var(--t),background var(--t),color var(--t);animation:fadeIn .2s ease}
 .scroll-bottom:hover{background:var(--bg-hover);color:var(--text);transform:translateX(-50%) translateY(-2px)}
 
-/* ============================================================
-   INPUT
-   ============================================================ */
 .input-area{flex-shrink:0;padding:8px 24px 16px;background:var(--bg);border-top:1px solid var(--border-soft)}
 .input-inner{max-width:768px;margin:0 auto}
 .web-pill{display:inline-flex;align-items:center;gap:6px;padding:4px 10px;border-radius:var(--radius-pill);background:var(--bg-input);color:var(--text);font-size:12px;font-weight:600;margin-bottom:8px}
@@ -269,14 +245,8 @@ a{color:inherit;text-decoration:none}
 .send-btn.stop:hover{background:#b91c1c}
 .disclaimer{text-align:center;font-size:11.5px;color:var(--text-3);margin-top:10px}
 
-/* ============================================================
-   ATTACH MENU
-   ============================================================ */
 .attach-menu{position:fixed;background:#fff;border:1px solid var(--border);border-radius:var(--radius);box-shadow:0 4px 20px rgba(0,0,0,.1);padding:6px;z-index:200;min-width:200px;bottom:130px;left:24px;animation:pop .12s ease}
 
-/* ============================================================
-   MODALS
-   ============================================================ */
 .modal-overlay{position:fixed;inset:0;z-index:300;background:rgba(20,20,30,.5);backdrop-filter:blur(3px);display:flex;align-items:center;justify-content:center;padding:20px;animation:fadeIn .15s ease}
 .modal{width:100%;max-width:560px;max-height:90vh;background:#fff;border-radius:var(--radius-lg);display:flex;flex-direction:column;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,.2);animation:pop .18s ease}
 .modal-narrow{max-width:440px}
@@ -310,8 +280,6 @@ a{color:inherit;text-decoration:none}
 .accent-dot[data-accent="rose"]{background:#e11d48}
 .accent-dot[data-accent="amber"]{background:#d97706}
 .danger-section h4{color:var(--danger)}
-
-/* Buttons inside modals */
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:11px 18px;border-radius:var(--radius);font-size:14px;font-weight:600;transition:background var(--t),color var(--t),border-color var(--t),transform var(--t);white-space:nowrap}
 .btn:active{transform:scale(.98)}
 .btn-primary{background:var(--accent);color:var(--accent-fg)}
@@ -322,9 +290,6 @@ a{color:inherit;text-decoration:none}
 .btn-danger-outline{background:transparent;color:var(--danger);border:1px solid var(--danger-border)}
 .btn-danger-outline:hover{background:var(--danger-soft)}
 
-/* ============================================================
-   VOICE OVERLAY
-   ============================================================ */
 .voice-overlay{position:fixed;inset:0;z-index:400;background:linear-gradient(180deg,#0a0a0f 0%,#1a1a1e 100%);color:#fff;display:flex;flex-direction:column;padding:24px;animation:fadeIn .2s ease}
 .voice-top{display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
 .voice-label{font-size:14px;font-weight:600;letter-spacing:-.2px;color:rgba(255,255,255,.75)}
@@ -359,9 +324,6 @@ a{color:inherit;text-decoration:none}
 .voice-ctrl.danger:hover{background:#b91c1c}
 .voice-ctrl.muted{background:#dc2626}
 
-/* ============================================================
-   TOASTS
-   ============================================================ */
 .toast-stack{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;gap:8px;align-items:center;z-index:500;pointer-events:none}
 .toast{padding:10px 16px;border-radius:var(--radius-pill);background:var(--text);color:#fff;font-size:13px;font-weight:500;box-shadow:0 4px 16px rgba(0,0,0,.15);display:flex;align-items:center;gap:8px;animation:toastIn .2s ease;max-width:90vw}
 .toast.error{background:var(--danger)}
@@ -370,9 +332,6 @@ a{color:inherit;text-decoration:none}
 .toast.out{animation:toastOut .2s ease forwards}
 @keyframes toastOut{to{opacity:0;transform:translateY(-8px)}}
 
-/* ============================================================
-   RESPONSIVE
-   ============================================================ */
 @media (max-width:768px){
   :root{--sidebar-w:280px}
   .mobile-only{display:flex!important}
@@ -405,7 +364,6 @@ a{color:inherit;text-decoration:none}
 <body>
 <div id="app">
 
-<!-- SPLASH -->
 <div id="splash" class="splash-screen">
   <div class="splash-inner">
     <div class="splash-logo"><i class="fa-solid fa-bolt"></i></div>
@@ -414,10 +372,8 @@ a{color:inherit;text-decoration:none}
   </div>
 </div>
 
-<!-- MAIN -->
 <div id="main" class="hidden" style="height:100dvh">
   <div class="app-shell">
-    <!-- SIDEBAR -->
     <aside class="sidebar" id="sidebar">
       <div class="sidebar-top">
         <div class="logo"><div class="logo-icon"><i class="fa-solid fa-bolt"></i></div><span>NEXGPT</span></div>
@@ -452,7 +408,6 @@ a{color:inherit;text-decoration:none}
 
     <div class="backdrop" id="backdrop"></div>
 
-    <!-- MAIN PANEL -->
     <main class="main-panel">
       <header class="header">
         <button type="button" class="icon-btn mobile-menu-btn" id="mobileMenuBtn"><i class="fa-solid fa-bars"></i></button>
@@ -501,7 +456,6 @@ a{color:inherit;text-decoration:none}
   </div>
 </div>
 
-<!-- ATTACH MENU -->
 <div class="attach-menu hidden" id="attachMenu">
   <button type="button" class="popover-item" data-attach="images"><i class="fa-regular fa-image"></i><span>Photo library</span></button>
   <button type="button" class="popover-item mobile-only" data-attach="camera"><i class="fa-solid fa-camera"></i><span>Take photo</span></button>
@@ -509,7 +463,6 @@ a{color:inherit;text-decoration:none}
   <button type="button" class="popover-item" data-attach="audio"><i class="fa-solid fa-microphone-lines"></i><span>Audio file</span></button>
 </div>
 
-<!-- SETTINGS MODAL -->
 <div class="modal-overlay hidden" id="settingsModal">
   <div class="modal">
     <div class="modal-head">
@@ -557,7 +510,6 @@ a{color:inherit;text-decoration:none}
   </div>
 </div>
 
-<!-- GUEST LIMIT MODAL -->
 <div class="modal-overlay hidden" id="guestLimitModal">
   <div class="modal modal-narrow">
     <div class="modal-head">
@@ -574,7 +526,6 @@ a{color:inherit;text-decoration:none}
   </div>
 </div>
 
-<!-- VOICE OVERLAY -->
 <div class="voice-overlay hidden" id="voiceOverlay">
   <div class="voice-top">
     <div class="voice-label" id="voiceLabel">Listening…</div>
@@ -605,28 +556,28 @@ a{color:inherit;text-decoration:none}
 </div>
 
 <script type="module">
-/* ============================================================
-   NEXGPT — chat.html full logic
-   ============================================================ */
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
 import { getAuth, onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
 import { getFirestore, doc, setDoc, getDoc, collection, query, orderBy, onSnapshot, updateDoc, deleteDoc, getDocs, serverTimestamp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
 
+/* ============================================================
+   HARDCODED CONFIG
+   ============================================================ */
 const firebaseConfig = {
-  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
-  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
-  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
-  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
-  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
-  appId: import.meta.env.VITE_FIREBASE_APP_ID
+  apiKey: "AIzaSyAcg4uh4lqOJ8pwUDmDppyyrmOB9Mv4YZA",
+  authDomain: "nexgpt-8249a.firebaseapp.com",
+  projectId: "nexgpt-8249a",
+  storageBucket: "nexgpt-8249a.firebasestorage.app",
+  messagingSenderId: "619126243121",
+  appId: "1:619126243121:web:47c46e57498d67ff107a10"
 };
-const OPENROUTER_KEY = import.meta.env.VITE_OPENROUTER_API_KEY || '';
+
+const OPENROUTER_KEY = "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";
 
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
 
-/* ---------- Constants ---------- */
 const API_URL = 'https://openrouter.ai/api/v1/chat/completions';
 const GUEST_MESSAGE_LIMIT = 20;
 const GUEST_MODEL_ID = 'meta-llama/llama-3.3-70b-instruct:free';
@@ -656,7 +607,6 @@ const MODELS = [
   { id: 'openrouter/free', name: 'Auto (Free Router)', desc: 'Automatically picks the best available free model.', badges: ['free'], vision: true, audio: false }
 ];
 
-/* ---------- State ---------- */
 const state = {
   user: null, isGuest: false, chats: [], activeChatId: null,
   activeModelId: MODELS[0].id, streaming: false, abortController: null,
@@ -668,14 +618,12 @@ const state = {
   }
 };
 
-/* ---------- Helpers ---------- */
 const $ = (id) => document.getElementById(id);
 const $$ = (sel, root = document) => root.querySelectorAll(sel);
 const el = (tag, cls, html) => { const e = document.createElement(tag); if (cls) e.className = cls; if (html != null) e.innerHTML = html; return e; };
 const esc = (s) => String(s ?? '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#039;');
 const clamp = (n,a,b) => Math.max(a, Math.min(b, n));
 
-/* ---------- Toasts ---------- */
 function toast(msg, type='') {
   const stack = $('toastStack');
   const t = el('div', 'toast ' + type);
@@ -684,7 +632,6 @@ function toast(msg, type='') {
   setTimeout(() => { t.classList.add('out'); setTimeout(() => t.remove(), 220); }, 2800);
 }
 
-/* ---------- Settings persistence ---------- */
 function loadSettings() {
   try {
     const raw = localStorage.getItem('nexgpt_settings');
@@ -700,20 +647,13 @@ function applyAccent(accent) {
   $$('#accentPicker .accent-dot').forEach(d => d.classList.toggle('active', d.dataset.accent === accent));
 }
 
-/* ---------- Auth state ---------- */
 function onUserChanged(user) {
   if (state.unsubscribeChats) { state.unsubscribeChats(); state.unsubscribeChats = null; }
   state.user = user;
   state.isGuest = !!(user && user.isAnonymous);
-
-  if (!user) {
-    window.location.replace('./login.html');
-    return;
-  }
-
+  if (!user) { window.location.replace('./login.html'); return; }
   $('splash').classList.add('hidden');
   $('main').classList.remove('hidden');
-
   ensureUserProfile(user).then(() => {
     renderUserCard();
     renderGuestBanner();
@@ -737,7 +677,6 @@ async function ensureUserProfile(user) {
   }
 }
 
-/* ---------- Chat subscription ---------- */
 function chatsCol(uid) { return collection(db, 'users', uid, 'chats'); }
 
 function subscribeChats(uid) {
@@ -745,13 +684,8 @@ function subscribeChats(uid) {
   state.unsubscribeChats = onSnapshot(q, (snap) => {
     state.chats = snap.docs.map(d => ({ id: d.id, ...d.data() }));
     if (!state.activeChatId && state.chats.length) state.activeChatId = state.chats[0].id;
-    if (!state.chats.length) {
-      createChat();
-    } else {
-      renderChatList();
-      renderMessages();
-      updateGuestBannerCount();
-    }
+    if (!state.chats.length) { createChat(); }
+    else { renderChatList(); renderMessages(); updateGuestBannerCount(); }
   }, err => console.error('Chat subscribe error:', err));
 }
 
@@ -793,7 +727,6 @@ async function clearAllChats() {
   toast('All chats deleted.', 'success');
 }
 
-/* ---------- Sidebar ---------- */
 function getFilteredChats() {
   const q = state.searchQuery.trim().toLowerCase();
   if (!q) return state.chats;
@@ -883,7 +816,6 @@ function setActiveChat(id) {
   scrollToBottom();
 }
 
-/* ---------- Guest ---------- */
 function getGuestCount() { return parseInt(localStorage.getItem('nexgpt_guest_count') || '0', 10) || 0; }
 function setGuestCount(n) { localStorage.setItem('nexgpt_guest_count', String(n)); updateGuestBannerCount(); }
 function updateGuestBannerCount() {
@@ -897,7 +829,6 @@ function renderGuestBanner() {
   if (state.isGuest) updateGuestBannerCount();
 }
 
-/* ---------- User card ---------- */
 function renderUserCard() {
   const u = state.user;
   const name = u?.displayName || (u?.isAnonymous ? 'Guest' : (u?.email?.split('@')[0] || 'User'));
@@ -926,7 +857,6 @@ function colorFromString(s) {
   return `hsl(${hue}, 60%, 45%)`;
 }
 
-/* ---------- Model menu ---------- */
 function renderModelMenu() {
   const menu = $('modelMenu');
   menu.innerHTML = '';
@@ -962,10 +892,8 @@ function updateModelLabel() {
   $('modelLabel').textContent = m?.name || 'Select model';
 }
 
-/* ---------- Active chat ---------- */
 function getActiveChat() { return state.chats.find(c => c.id === state.activeChatId) || null; }
 
-/* ---------- Message render ---------- */
 function renderMessages() {
   const wrap = $('messages');
   wrap.innerHTML = '';
@@ -1102,7 +1030,6 @@ function attachCodeCopyButtons() {
   });
 }
 
-/* ---------- Markdown ---------- */
 function renderMarkdown(text) {
   if (!text) return '';
   const parts = [];
@@ -1143,7 +1070,6 @@ function renderTextMarkdown(text) {
   }).join('');
 }
 
-/* ---------- Scroll ---------- */
 function scrollToBottom() {
   const w = $('messagesWrap');
   requestAnimationFrame(() => { w.scrollTop = w.scrollHeight; });
@@ -1153,7 +1079,6 @@ function isNearBottom() {
   return w.scrollHeight - w.scrollTop - w.clientHeight < 120;
 }
 
-/* ---------- Textarea ---------- */
 function autoResizeTextarea() {
   const t = $('chatInput');
   t.style.height = 'auto';
@@ -1177,7 +1102,6 @@ function updateSendButton() {
   $('tokenCounter').textContent = '~' + n + ' tokens';
 }
 
-/* ---------- Send + stream ---------- */
 async function handleSend() {
   const input = $('chatInput');
   const text = input.value.trim();
@@ -1379,7 +1303,6 @@ function switchVersion(chat, idx, dir) {
   updateChat(chat.id, { messages: msgs });
 }
 
-/* ---------- Auto title ---------- */
 async function autoTitle(chatId) {
   const chat = state.chats.find(c => c.id === chatId);
   if (!chat || !chat.messages || chat.messages.length < 2) return;
@@ -1407,7 +1330,6 @@ async function autoTitle(chatId) {
   } catch(_) {}
 }
 
-/* ---------- Attachments ---------- */
 async function processFile(file) {
   if (file.size > MAX_FILE_BYTES) { toast(`"${file.name}" is too large (max 10 MB).`, 'error'); return null; }
   const ext = (file.name.split('.').pop() || '').toLowerCase();
@@ -1487,7 +1409,6 @@ function renderAttachTray() {
   });
 }
 
-/* ---------- Voice ---------- */
 let recognition = null;
 let voiceLoopActive = false;
 
@@ -1662,7 +1583,6 @@ function closeVoiceChat() {
   $('voiceOverlay').classList.add('hidden');
 }
 
-/* ---------- Settings ---------- */
 function openSettings() {
   $('settingsSystemPrompt').value = state.settings.systemPrompt;
   $('settingsTemp').value = state.settings.temperature;
@@ -1676,7 +1596,6 @@ function openSettings() {
   $('settingsModal').classList.remove('hidden');
 }
 
-/* ---------- Export / copy ---------- */
 function chatToMarkdown(chat) {
   const lines = [`# ${chat.title || 'Chat'}`, ''];
   (chat.messages || []).forEach(m => {
@@ -1716,11 +1635,9 @@ function shareChat() {
   toast('Share link copied.', 'success');
 }
 
-/* ---------- Sidebar mobile ---------- */
 function openSidebarMobile() { $('sidebar').classList.add('open'); $('backdrop').classList.add('show'); }
 function closeSidebarMobile() { $('sidebar').classList.remove('open'); $('backdrop').classList.remove('show'); }
 
-/* ---------- Shortcuts ---------- */
 document.addEventListener('keydown', e => {
   if (e.key === 'Escape') {
     if (state.streaming) { stopStreaming(); return; }
@@ -1737,7 +1654,6 @@ document.addEventListener('keydown', e => {
   }
 });
 
-/* ---------- Events ---------- */
 function bindEvents() {
   $('newChatBtn').addEventListener('click', () => { createChat().then(() => { $('chatInput').focus(); closeSidebarMobile(); }); });
   $('chatSearchInput').addEventListener('input', e => { state.searchQuery = e.target.value; $('chatSearchClear').classList.toggle('hidden', !state.searchQuery); renderChatList(); });
@@ -1747,8 +1663,7 @@ function bindEvents() {
 
   $('userCardBtn').addEventListener('click', e => {
     e.stopPropagation();
-    const pop = $('userPopover');
-    pop.classList.toggle('hidden');
+    $('userPopover').classList.toggle('hidden');
   });
   document.addEventListener('click', e => {
     if (!$('userPopover').contains(e.target) && e.target !== $('userCardBtn')) $('userPopover').classList.add('hidden');
@@ -1849,7 +1764,6 @@ function bindEvents() {
   $('clearAllChatsBtn').addEventListener('click', () => { if (confirm('Delete ALL chats? This cannot be undone.')) clearAllChats(); });
 }
 
-/* ---------- Boot ---------- */
 function boot() {
   loadSettings();
   bindEvents();
