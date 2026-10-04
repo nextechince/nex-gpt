@@ -2,361 +2,174 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, interactive-widget=resizes-content" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, interactive-widget=resizes-content" />
 <meta name="theme-color" content="#1a1a1e" />
-<meta name="description" content="NEXGPT — free AI assistant with chat, vision and voice." />
 <title>NEXGPT</title>
-<link rel="preconnect" href="https://fonts.googleapis.com" />
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
-<link rel="manifest" href="/manifest.webmanifest" />
-<link rel="stylesheet" href="./styles.css" />
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body {
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: #ffffff;
+    color: #1a1a1e;
+  }
+  body {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #ffffff;
+  }
+  .splash {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    animation: fadeIn .35s ease;
+  }
+  .splash-logo {
+    width: 68px; height: 68px;
+    border-radius: 20px;
+    background: #1a1a1e;
+    color: #fff;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 30px;
+  }
+  .splash-title {
+    font-size: 24px;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+  }
+  .splash-sub {
+    font-size: 13px;
+    color: #9b9ba8;
+    letter-spacing: -0.1px;
+  }
+  .splash-loader {
+    display: flex;
+    gap: 6px;
+    margin-top: 8px;
+  }
+  .splash-loader span {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: #9b9ba8;
+    animation: blink 1.2s infinite both;
+  }
+  .splash-loader span:nth-child(2) { animation-delay: .15s; }
+  .splash-loader span:nth-child(3) { animation-delay: .3s; }
+  @keyframes blink {
+    0%, 80%, 100% { opacity: .3; transform: scale(.85); }
+    40% { opacity: 1; transform: scale(1); }
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(4px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  .error {
+    max-width: 380px;
+    padding: 20px;
+    border-radius: 12px;
+    border: 1px solid #fecaca;
+    background: #fef2f2;
+    color: #991b1b;
+    font-size: 14px;
+    line-height: 1.55;
+    text-align: center;
+  }
+  .error h2 {
+    font-size: 16px;
+    margin-bottom: 8px;
+    font-weight: 700;
+  }
+  .error code {
+    font-family: ui-monospace, 'SF Mono', Consolas, monospace;
+    font-size: 12.5px;
+    background: rgba(0,0,0,.05);
+    padding: 1px 5px;
+    border-radius: 4px;
+  }
+</style>
 </head>
 <body>
-<div id="app">
 
-<!-- SPLASH -->
-<div id="splash" class="screen splash-screen">
-  <div class="splash-inner">
-    <div class="splash-logo"><i class="fa-solid fa-bolt"></i></div>
-    <div class="splash-title">NEXGPT</div>
-    <div class="splash-loader"><span></span><span></span><span></span></div>
+<div id="splash" class="splash">
+  <div class="splash-logo">
+    <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+      <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" fill="currentColor" stroke="none"/>
+    </svg>
   </div>
+  <div class="splash-title">NEXGPT</div>
+  <div class="splash-sub">Advanced Ai Model…</div>
+  <div class="splash-loader"><span></span><span></span><span></span></div>
 </div>
 
-<!-- AUTH -->
-<div id="auth" class="screen auth-screen hidden">
-  <aside class="auth-aside">
-    <div class="auth-aside-inner">
-      <div class="auth-brand">
-        <div class="brand-icon"><i class="fa-solid fa-bolt"></i></div>
-        <span>NEXGPT</span>
-      </div>
-      <h1 class="auth-aside-title">Your AI assistant,<br />always on.</h1>
-      <p class="auth-aside-sub">Chat with powerful free models, send images, talk out loud, and keep every conversation synced across your devices.</p>
-      <ul class="auth-aside-list">
-        <li><i class="fa-solid fa-check"></i> Free models, no credit card</li>
-        <li><i class="fa-solid fa-check"></i> Vision &amp; voice built in</li>
-        <li><i class="fa-solid fa-check"></i> Sync across devices</li>
-      </ul>
-    </div>
-  </aside>
+<script type="module">
+  // ============================================================
+  // NEXGPT — Router
+  // Checks Firebase auth state and redirects the user:
+  //   - signed in (any kind, incl. anonymous) → chat.html
+  //   - signed out                            → login.html
+  // ============================================================
 
-  <main class="auth-main">
-    <div class="auth-card">
-      <div class="auth-card-head">
-        <div class="brand-icon mobile-only"><i class="fa-solid fa-bolt"></i></div>
-        <h2 id="authTitle">Welcome back</h2>
-        <p id="authSubtitle">Sign in to continue to NEXGPT</p>
-      </div>
+  import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
+  import { getAuth, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
 
-      <div class="auth-tabs" role="tablist">
-        <button type="button" class="auth-tab active" id="tabSignin" role="tab" aria-selected="true">Sign in</button>
-        <button type="button" class="auth-tab" id="tabSignup" role="tab" aria-selected="false">Sign up</button>
-      </div>
+  // ---- Firebase config from Vite env vars ----
+  const firebaseConfig = {
+    apiKey:            import.meta.env.VITE_FIREBASE_API_KEY,
+    authDomain:        import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+    projectId:         import.meta.env.VITE_FIREBASE_PROJECT_ID,
+    storageBucket:     import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
+    messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
+    appId:             import.meta.env.VITE_FIREBASE_APP_ID
+  };
 
-      <div id="authError" class="auth-error hidden" role="alert"></div>
+  function showError(html) {
+    document.body.innerHTML = `<div class="error">${html}</div>`;
+  }
 
-      <form id="signinForm" class="auth-form" autocomplete="on">
-        <label class="field">
-          <span class="field-label">Email</span>
-          <div class="field-input">
-            <i class="fa-regular fa-envelope"></i>
-            <input type="email" id="signinEmail" name="email" placeholder="you@example.com" autocomplete="email" required />
-          </div>
-        </label>
-        <label class="field">
-          <span class="field-label">Password</span>
-          <div class="field-input">
-            <i class="fa-solid fa-lock"></i>
-            <input type="password" id="signinPassword" name="password" placeholder="Your password" autocomplete="current-password" required />
-            <button type="button" class="field-eye" data-eye="signinPassword" aria-label="Toggle password visibility"><i class="fa-regular fa-eye"></i></button>
-          </div>
-        </label>
-        <div class="auth-form-row">
-          <button type="button" id="forgotPasswordBtn" class="link-btn">Forgot password?</button>
-        </div>
-        <button type="submit" class="btn btn-primary btn-block" id="signinSubmit"><span class="btn-label">Sign in</span></button>
-      </form>
+  // Validate env
+  const missing = Object.entries(firebaseConfig)
+    .filter(([, v]) => !v)
+    .map(([k]) => k);
 
-      <form id="signupForm" class="auth-form hidden" autocomplete="on">
-        <label class="field">
-          <span class="field-label">Username</span>
-          <div class="field-input">
-            <i class="fa-regular fa-user"></i>
-            <input type="text" id="signupUsername" name="username" placeholder="prince" autocomplete="username" minlength="3" maxlength="24" pattern="[A-Za-z0-9_]+" title="Letters, numbers, and underscores only" required />
-          </div>
-        </label>
-        <label class="field">
-          <span class="field-label">Email</span>
-          <div class="field-input">
-            <i class="fa-regular fa-envelope"></i>
-            <input type="email" id="signupEmail" name="email" placeholder="you@example.com" autocomplete="email" required />
-          </div>
-        </label>
-        <label class="field">
-          <span class="field-label">Password</span>
-          <div class="field-input">
-            <i class="fa-solid fa-lock"></i>
-            <input type="password" id="signupPassword" name="password" placeholder="At least 8 characters" autocomplete="new-password" minlength="8" required />
-            <button type="button" class="field-eye" data-eye="signupPassword" aria-label="Toggle password visibility"><i class="fa-regular fa-eye"></i></button>
-          </div>
-        </label>
-        <label class="field">
-          <span class="field-label">Confirm password</span>
-          <div class="field-input">
-            <i class="fa-solid fa-lock"></i>
-            <input type="password" id="signupPasswordConfirm" name="passwordConfirm" placeholder="Repeat your password" autocomplete="new-password" minlength="8" required />
-            <button type="button" class="field-eye" data-eye="signupPasswordConfirm" aria-label="Toggle password visibility"><i class="fa-regular fa-eye"></i></button>
-          </div>
-        </label>
-        <button type="submit" class="btn btn-primary btn-block" id="signupSubmit"><span class="btn-label">Create account</span></button>
-      </form>
+  if (missing.length) {
+    showError(`
+      <h2>Missing Firebase config</h2>
+      <p>These env vars are not set:</p>
+      <p style="margin-top:8px">${missing.map(m => `<code>VITE_FIREBASE_${m.replace(/([A-Z])/g, '_$1').toUpperCase()}</code>`).join('<br>')}</p>
+      <p style="margin-top:12px">Add them to <code>.env</code> locally and to Vercel → Settings → Environment Variables, then redeploy.</p>
+    `);
+    throw new Error('Missing env: ' + missing.join(', '));
+  }
 
-      <div class="auth-divider"><span>or</span></div>
+  // Initialize Firebase once
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
 
-      <div class="auth-oauth">
-        <button type="button" class="btn btn-oauth" id="googleSigninBtn"><i class="fa-brands fa-google"></i><span>Continue with Google</span></button>
-        <button type="button" class="btn btn-ghost" id="guestBtn"><i class="fa-solid fa-user-secret"></i><span>Continue as guest</span></button>
-      </div>
+  // Router
+  let redirected = false;
+  onAuthStateChanged(auth, (user) => {
+    if (redirected) return;
+    redirected = true;
+    if (user) {
+      // Signed in — including anonymous guests
+      window.location.replace('./chat.html');
+    } else {
+      // Signed out
+      window.location.replace('./login.html');
+    }
+  });
 
-      <p class="auth-fineprint">Guests get 20 messages and Llama&nbsp;3.3&nbsp;70B only. Sign up free to unlock everything and keep your chats forever.</p>
-    </div>
-  </main>
-</div>
-
-<!-- MAIN -->
-<div id="main" class="screen main-screen hidden">
-  <div class="app-shell">
-
-    <aside class="sidebar" id="sidebar">
-      <div class="sidebar-top">
-        <div class="logo">
-          <div class="logo-icon"><i class="fa-solid fa-bolt"></i></div>
-          <span>NEXGPT</span>
-        </div>
-        <button type="button" class="icon-btn" id="newChatBtn" title="New chat (Ctrl+K)" aria-label="New chat"><i class="fa-solid fa-pen-to-square"></i></button>
-      </div>
-
-      <div class="sidebar-search">
-        <i class="fa-solid fa-magnifying-glass"></i>
-        <input type="text" id="chatSearchInput" placeholder="Search chats" aria-label="Search chats" />
-        <button type="button" class="search-clear hidden" id="chatSearchClear" aria-label="Clear search"><i class="fa-solid fa-xmark"></i></button>
-      </div>
-
-      <div id="guestBanner" class="guest-banner hidden">
-        <i class="fa-solid fa-circle-info"></i>
-        <div class="guest-banner-text">
-          <strong>You're a guest</strong>
-          <span id="guestBannerMsg">Sign in to save your chats forever.</span>
-        </div>
-        <button type="button" class="btn btn-tiny" id="guestBannerSignin">Sign in</button>
-      </div>
-
-      <nav class="chat-list" id="chatList" aria-label="Chat history"></nav>
-
-      <div class="sidebar-bottom">
-        <button type="button" class="user-card" id="userCardBtn" aria-haspopup="menu" aria-expanded="false">
-          <div class="user-avatar" id="userAvatar"><i class="fa-solid fa-user"></i></div>
-          <div class="user-meta">
-            <div class="user-name" id="userName">Local User</div>
-            <div class="user-sub" id="userSub">Guest</div>
-          </div>
-          <i class="fa-solid fa-chevron-up user-caret"></i>
-        </button>
-
-        <div class="user-popover hidden" id="userPopover" role="menu">
-          <button type="button" class="popover-item" id="openSettingsBtn" role="menuitem"><i class="fa-solid fa-gear"></i><span>Settings</span></button>
-          <button type="button" class="popover-item" id="openExportBtn" role="menuitem"><i class="fa-solid fa-file-export"></i><span>Export chats</span></button>
-          <div class="popover-sep"></div>
-          <button type="button" class="popover-item danger hidden" id="signOutBtn" role="menuitem"><i class="fa-solid fa-arrow-right-from-bracket"></i><span>Sign out</span></button>
-          <button type="button" class="popover-item danger hidden" id="upgradeGuestBtn" role="menuitem"><i class="fa-solid fa-arrow-up-right-dots"></i><span>Create account</span></button>
-        </div>
-      </div>
-    </aside>
-
-    <div class="backdrop" id="backdrop"></div>
-
-    <main class="main-panel">
-      <header class="header">
-        <button type="button" class="icon-btn mobile-menu-btn" id="mobileMenuBtn" aria-label="Open menu"><i class="fa-solid fa-bars"></i></button>
-
-        <div class="header-center">
-          <button type="button" class="model-selector" id="modelSelectorBtn" aria-haspopup="menu" aria-expanded="false">
-            <span id="modelLabel">Llama 3.3 70B</span>
-            <i class="fa-solid fa-chevron-down"></i>
-          </button>
-          <div class="model-menu hidden" id="modelMenu" role="menu"></div>
-        </div>
-
-        <div class="header-right">
-          <button type="button" class="icon-btn" id="copyAllBtn" title="Copy conversation" aria-label="Copy conversation"><i class="fa-regular fa-copy"></i></button>
-          <button type="button" class="icon-btn" id="shareBtn" title="Share conversation" aria-label="Share conversation"><i class="fa-solid fa-share-nodes"></i></button>
-        </div>
-      </header>
-
-      <div class="messages-wrap" id="messagesWrap">
-        <div class="messages" id="messages"></div>
-      </div>
-
-      <button type="button" class="scroll-bottom hidden" id="scrollBottomBtn" aria-label="Scroll to latest"><i class="fa-solid fa-arrow-down"></i></button>
-
-      <div class="input-area">
-        <div class="input-inner">
-          <div class="attach-tray hidden" id="attachTray"></div>
-
-          <div class="web-pill hidden" id="webPill"><i class="fa-solid fa-globe"></i><span>Web</span></div>
-
-          <div class="input-box">
-            <textarea id="chatInput" class="chat-textarea" placeholder="Message NEXGPT..." rows="1" enterkeyhint="enter" aria-label="Message input"></textarea>
-
-            <div class="input-toolbar">
-              <div class="input-tools-left">
-                <button type="button" class="tool-btn" id="attachBtn" title="Attach file" aria-label="Attach file"><i class="fa-solid fa-paperclip"></i></button>
-                <button type="button" class="tool-btn" id="webToggleBtn" title="Web search" aria-label="Toggle web search"><i class="fa-solid fa-globe"></i></button>
-                <button type="button" class="tool-btn" id="voiceBtn" title="Voice input" aria-label="Voice input"><i class="fa-solid fa-microphone"></i></button>
-              </div>
-
-              <div class="input-tools-right">
-                <span class="token-counter" id="tokenCounter">~0 tokens</span>
-                <button type="button" class="send-btn" id="sendBtn" disabled title="Send" aria-label="Send message"><i class="fa-solid fa-arrow-up"></i></button>
-                <button type="button" class="send-btn stop hidden" id="stopBtn" title="Stop" aria-label="Stop generation"><i class="fa-solid fa-square"></i></button>
-              </div>
-            </div>
-          </div>
-
-          <div class="disclaimer">NEXGPT can make mistakes. Check important info.</div>
-        </div>
-      </div>
-    </main>
-  </div>
-</div>
-
-<!-- ATTACH MENU -->
-<div class="attach-menu hidden" id="attachMenu">
-  <button type="button" class="popover-item" data-attach="images"><i class="fa-regular fa-image"></i><span>Photo library</span></button>
-  <button type="button" class="popover-item mobile-only" data-attach="camera"><i class="fa-solid fa-camera"></i><span>Take photo</span></button>
-  <button type="button" class="popover-item" data-attach="docs"><i class="fa-regular fa-file-lines"></i><span>Document</span></button>
-  <button type="button" class="popover-item" data-attach="audio"><i class="fa-solid fa-microphone-lines"></i><span>Audio file</span></button>
-</div>
-
-<!-- SETTINGS MODAL -->
-<div class="modal-overlay hidden" id="settingsModal" role="dialog" aria-modal="true">
-  <div class="modal">
-    <div class="modal-head">
-      <h3>Settings</h3>
-      <button type="button" class="icon-btn" data-close="settingsModal" aria-label="Close"><i class="fa-solid fa-xmark"></i></button>
-    </div>
-    <div class="modal-body">
-
-      <section class="settings-section">
-        <h4>Accent colour</h4>
-        <div class="accent-picker" id="accentPicker">
-          <button type="button" class="accent-dot" data-accent="default" title="DeepSeek"></button>
-          <button type="button" class="accent-dot" data-accent="blue" title="Blue"></button>
-          <button type="button" class="accent-dot" data-accent="violet" title="Violet"></button>
-          <button type="button" class="accent-dot" data-accent="emerald" title="Emerald"></button>
-          <button type="button" class="accent-dot" data-accent="rose" title="Rose"></button>
-          <button type="button" class="accent-dot" data-accent="amber" title="Amber"></button>
-        </div>
-      </section>
-
-      <section class="settings-section">
-        <h4>System prompt</h4>
-        <div class="preset-row" id="presetRow">
-          <button type="button" class="chip" data-preset="default">Default</button>
-          <button type="button" class="chip" data-preset="coder">Coder</button>
-          <button type="button" class="chip" data-preset="writer">Writer</button>
-          <button type="button" class="chip" data-preset="teacher">Teacher</button>
-          <button type="button" class="chip" data-preset="concise">Concise</button>
-        </div>
-        <textarea id="settingsSystemPrompt" class="settings-textarea" rows="5" placeholder="You are NEXGPT..."></textarea>
-      </section>
-
-      <section class="settings-section">
-        <h4>Generation</h4>
-        <label class="slider-row">
-          <span>Temperature</span>
-          <input type="range" id="settingsTemp" min="0" max="1.5" step="0.1" value="0.7" />
-          <span class="slider-val" id="settingsTempVal">0.7</span>
-        </label>
-        <label class="slider-row">
-          <span>Max tokens</span>
-          <input type="range" id="settingsMaxTokens" min="256" max="8192" step="256" value="2048" />
-          <span class="slider-val" id="settingsMaxTokensVal">2048</span>
-        </label>
-      </section>
-
-      <section class="settings-section">
-        <h4>Voice</h4>
-        <label class="row">
-          <span>Auto-read replies</span>
-          <input type="checkbox" id="settingsAutoTTS" class="switch" />
-        </label>
-        <label class="row">
-          <span>Voice</span>
-          <select id="settingsVoice" class="select"></select>
-        </label>
-      </section>
-
-      <section class="settings-section danger-section">
-        <h4>Danger zone</h4>
-        <button type="button" class="btn btn-danger-outline" id="clearAllChatsBtn"><i class="fa-solid fa-trash-can"></i> Delete all chats</button>
-      </section>
-
-    </div>
-  </div>
-</div>
-
-<!-- GUEST LIMIT MODAL -->
-<div class="modal-overlay hidden" id="guestLimitModal" role="dialog" aria-modal="true">
-  <div class="modal modal-narrow">
-    <div class="modal-head">
-      <h3>Guest limit reached</h3>
-      <button type="button" class="icon-btn" data-close="guestLimitModal" aria-label="Close"><i class="fa-solid fa-xmark"></i></button>
-    </div>
-    <div class="modal-body">
-      <p class="muted" id="guestLimitBody">You've used your 20 guest messages. Sign up free to keep going and keep all your chats.</p>
-      <div class="modal-actions">
-        <button type="button" class="btn btn-ghost" data-close="guestLimitModal">Not now</button>
-        <button type="button" class="btn btn-primary" id="guestUpgradeBtn">Sign up free</button>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- VOICE OVERLAY -->
-<div class="voice-overlay hidden" id="voiceOverlay" role="dialog" aria-modal="true">
-  <div class="voice-top">
-    <div class="voice-label" id="voiceLabel">Listening…</div>
-    <button type="button" class="icon-btn" id="voiceCloseBtn" aria-label="Close voice chat"><i class="fa-solid fa-xmark"></i></button>
-  </div>
-  <div class="voice-orb-wrap">
-    <div class="voice-orb" id="voiceOrb">
-      <div class="voice-orb-core"></div>
-      <div class="voice-orb-ring r1"></div>
-      <div class="voice-orb-ring r2"></div>
-      <div class="voice-orb-ring r3"></div>
-    </div>
-  </div>
-  <div class="voice-transcript" id="voiceTranscript"></div>
-  <div class="voice-controls">
-    <button type="button" class="voice-ctrl" id="voiceMuteBtn" aria-label="Mute"><i class="fa-solid fa-microphone-slash"></i></button>
-    <button type="button" class="voice-ctrl danger" id="voiceEndBtn" aria-label="End call"><i class="fa-solid fa-phone-slash"></i></button>
-  </div>
-</div>
-
-<!-- TOASTS -->
-<div class="toast-stack" id="toastStack" aria-live="polite" aria-atomic="false"></div>
-
-<!-- HIDDEN FILE INPUTS -->
-<input type="file" id="fileInputImages" class="hidden" accept="image/*" multiple />
-<input type="file" id="fileInputCamera" class="hidden" accept="image/*" capture="environment" />
-<input type="file" id="fileInputDocs" class="hidden" accept=".pdf,.txt,.md,.json,.csv" multiple />
-<input type="file" id="fileInputAudio" class="hidden" accept="audio/*" multiple />
-
-</div>
-<script type="module" src="./main.js"></script>
+  // Safety net: if Firebase no respond in 6s, push to login
+  setTimeout(() => {
+    if (!redirected) {
+      redirected = true;
+      window.location.replace('./login.html');
+    }
+  }, 6000);
+</script>
 </body>
 </html>
