@@ -3,322 +3,132 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, interactive-widget=resizes-content" />
-<meta name="theme-color" content="#ffffff" />
 <title>Sign in — NEXGPT</title>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
 <style>
-/* ============================================================
-   RESET
-   ============================================================ */
 * { margin: 0; padding: 0; box-sizing: border-box; }
 html, body {
-  height: 100%;
-  width: 100%;
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-  background: #ffffff;
-  color: #1a1a1e;
-  letter-spacing: -0.01em;
-  line-height: 1.6;
+  min-height: 100dvh; font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  background: #fff; color: #1a1a1e; letter-spacing: -0.01em; line-height: 1.6;
   -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  -webkit-tap-highlight-color: transparent;
 }
 button, input { font-family: inherit; font-size: inherit; color: inherit; }
 button { background: none; border: none; cursor: pointer; }
 a { color: inherit; text-decoration: none; }
 .hidden { display: none !important; }
 
-/* ============================================================
-   TOKENS
-   ============================================================ */
-:root {
-  --bg: #ffffff;
-  --bg-soft: #f9f9fb;
-  --bg-input: #f5f5f9;
-  --border: #e8e8f0;
-  --border-soft: #f0f0f2;
-  --text: #1a1a1e;
-  --text-2: #6b6b78;
-  --text-3: #9b9ba8;
-  --danger: #dc2626;
-  --danger-soft: #fef2f2;
-  --danger-border: #fecaca;
-  --accent: #1a1a1e;
-  --accent-hover: #2f2f3c;
-  --accent-fg: #ffffff;
-  --radius: 12px;
-  --radius-lg: 18px;
-  --t: 0.15s ease;
-}
-
-/* ============================================================
-   LAYOUT — two columns on desktop, single on mobile
-   ============================================================ */
-.auth-screen {
-  min-height: 100dvh;
-  display: flex;
-  flex-direction: row;
-}
-
-/* --- Left decorative panel (hidden on mobile) --- */
+.auth-screen { min-height: 100dvh; display: flex; flex-direction: row; }
 .auth-aside {
-  flex: 1;
-  background: var(--bg-soft);
-  border-right: 1px solid var(--border-soft);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 40px;
+  flex: 1; background: #f9f9fb; border-right: 1px solid #f0f0f2;
+  display: flex; align-items: center; justify-content: center; padding: 40px;
 }
 .auth-aside-inner { max-width: 420px; }
-.auth-brand {
-  display: flex; align-items: center; gap: 12px;
-  margin-bottom: 40px;
-}
-.auth-brand span {
-  font-weight: 700; font-size: 20px;
-  letter-spacing: -0.4px;
-}
+.auth-brand { display: flex; align-items: center; gap: 12px; margin-bottom: 40px; }
+.auth-brand span { font-weight: 700; font-size: 20px; letter-spacing: -0.4px; }
 .brand-icon {
-  width: 40px; height: 40px;
-  border-radius: 12px;
-  background: var(--text);
-  color: #fff;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 18px;
+  width: 40px; height: 40px; border-radius: 12px;
+  background: #1a1a1e; color: #fff;
+  display: flex; align-items: center; justify-content: center; font-size: 18px;
 }
-.auth-aside-title {
-  font-size: 36px; line-height: 1.15;
-  font-weight: 700; letter-spacing: -1px;
-  margin-bottom: 16px;
-}
-.auth-aside-sub {
-  color: var(--text-2);
-  font-size: 15px;
-  margin-bottom: 32px;
-}
-.auth-aside-list {
-  list-style: none;
-  display: flex; flex-direction: column; gap: 12px;
-}
-.auth-aside-list li {
-  display: flex; align-items: center; gap: 10px;
-  font-size: 14.5px; color: var(--text-2);
-}
+.auth-aside-title { font-size: 36px; line-height: 1.15; font-weight: 700; letter-spacing: -1px; margin-bottom: 16px; }
+.auth-aside-sub { color: #6b6b78; font-size: 15px; margin-bottom: 32px; }
+.auth-aside-list { list-style: none; display: flex; flex-direction: column; gap: 12px; }
+.auth-aside-list li { display: flex; align-items: center; gap: 10px; font-size: 14.5px; color: #6b6b78; }
 .auth-aside-list li i {
-  width: 20px; height: 20px;
-  border-radius: 50%;
-  background: var(--text); color: #fff;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 10px; flex-shrink: 0;
+  width: 20px; height: 20px; border-radius: 50%;
+  background: #1a1a1e; color: #fff;
+  display: flex; align-items: center; justify-content: center; font-size: 10px; flex-shrink: 0;
 }
 
-/* --- Right form panel --- */
-.auth-main {
-  flex: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 32px 24px;
-  overflow-y: auto;
-}
+.auth-main { flex: 1; display: flex; align-items: center; justify-content: center; padding: 32px 24px; overflow-y: auto; }
 .auth-card { width: 100%; max-width: 400px; }
-.auth-card-head { margin-bottom: 24px; text-align: left; }
-.auth-card-head h2 {
-  font-size: 26px; font-weight: 700;
-  letter-spacing: -0.5px;
-  margin-bottom: 6px;
-}
-.auth-card-head p { color: var(--text-2); font-size: 14px; }
+.auth-card-head { margin-bottom: 24px; }
+.auth-card-head h2 { font-size: 26px; font-weight: 700; letter-spacing: -0.5px; margin-bottom: 6px; }
+.auth-card-head p { color: #6b6b78; font-size: 14px; }
 .brand-icon.mobile-only { display: none; margin-bottom: 20px; }
 
-/* ============================================================
-   TABS
-   ============================================================ */
-.auth-tabs {
-  display: flex;
-  background: var(--bg-input);
-  border-radius: 10px;
-  padding: 4px;
-  margin-bottom: 20px;
-}
+.auth-tabs { display: flex; background: #f5f5f9; border-radius: 10px; padding: 4px; margin-bottom: 20px; }
 .auth-tab {
-  flex: 1;
-  padding: 9px;
-  border-radius: 7px;
-  font-size: 13.5px;
-  font-weight: 600;
-  color: var(--text-2);
-  transition: background var(--t), color var(--t);
+  flex: 1; padding: 9px; border-radius: 7px;
+  font-size: 13.5px; font-weight: 600; color: #6b6b78;
+  transition: 0.15s; text-align: center;
+  display: flex; align-items: center; justify-content: center;
 }
-.auth-tab.active {
-  background: #fff;
-  color: var(--text);
-  box-shadow: 0 1px 3px rgba(0,0,0,0.06);
-}
+.auth-tab.active { background: #fff; color: #1a1a1e; box-shadow: 0 1px 3px rgba(0,0,0,0.06); }
 
-/* ============================================================
-   FORM
-   ============================================================ */
 .auth-form { display: flex; flex-direction: column; gap: 14px; }
 .field { display: flex; flex-direction: column; gap: 6px; }
-.field-label {
-  font-size: 12.5px; font-weight: 600;
-  color: var(--text-2);
-}
+.field-label { font-size: 12.5px; font-weight: 600; color: #6b6b78; }
 .field-input {
   display: flex; align-items: center; gap: 10px;
-  background: var(--bg-input);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 11px 14px;
-  transition: border-color var(--t), box-shadow var(--t);
+  background: #f5f5f9; border: 1px solid #e8e8f0;
+  border-radius: 12px; padding: 11px 14px;
+  transition: 0.15s;
 }
-.field-input:focus-within {
-  border-color: var(--text-3);
-  box-shadow: 0 0 0 3px rgba(198,198,212,0.2);
-}
-.field-input i {
-  color: var(--text-3);
-  font-size: 14px;
-  flex-shrink: 0;
-}
-.field-input input {
-  flex: 1; border: none; background: none;
-  outline: none; font-size: 14.5px; min-width: 0;
-}
-.field-input input::placeholder { color: var(--text-3); }
+.field-input:focus-within { border-color: #9b9ba8; box-shadow: 0 0 0 3px rgba(198,198,212,0.2); }
+.field-input i { color: #9b9ba8; font-size: 14px; flex-shrink: 0; }
+.field-input input { flex: 1; border: none; background: none; outline: none; font-size: 14.5px; min-width: 0; }
+.field-input input::placeholder { color: #9b9ba8; }
 .field-eye {
-  width: 26px; height: 26px;
-  border-radius: 6px;
-  color: var(--text-3);
+  width: 26px; height: 26px; border-radius: 6px; color: #9b9ba8;
   display: flex; align-items: center; justify-content: center;
-  font-size: 13px;
-  transition: background var(--t), color var(--t);
+  font-size: 13px; transition: 0.15s;
 }
-.field-eye:hover { background: #ececf1; color: var(--text); }
+.field-eye:hover { background: #ececf1; color: #1a1a1e; }
+.auth-form-row { display: flex; justify-content: flex-end; margin-top: -4px; }
+.link-btn { color: #6b6b78; font-size: 13px; font-weight: 500; }
+.link-btn:hover { color: #1a1a1e; }
 
-.auth-form-row {
-  display: flex;
-  justify-content: flex-end;
-  margin-top: -4px;
-}
-.link-btn {
-  color: var(--text-2);
-  font-size: 13px;
-  font-weight: 500;
-  transition: color var(--t);
-}
-.link-btn:hover { color: var(--text); }
-
-/* ============================================================
-   ERROR
-   ============================================================ */
 .auth-error {
-  background: var(--danger-soft);
-  border: 1px solid var(--danger-border);
-  color: var(--danger);
-  padding: 10px 14px;
-  border-radius: 10px;
-  font-size: 13px;
-  margin-bottom: 16px;
+  background: #fef2f2; border: 1px solid #fecaca; color: #dc2626;
+  padding: 10px 14px; border-radius: 10px; font-size: 13px; margin-bottom: 16px;
 }
+.auth-error.success { background: #ecfdf5; border-color: #a7f3d0; color: #047857; }
 
-/* ============================================================
-   BUTTONS
-   ============================================================ */
 .btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  padding: 11px 18px;
-  border-radius: var(--radius);
-  font-size: 14px;
-  font-weight: 600;
-  transition: background var(--t), color var(--t), border-color var(--t), transform var(--t);
-  white-space: nowrap;
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  padding: 11px 18px; border-radius: 12px; font-size: 14px; font-weight: 600;
+  transition: 0.15s; white-space: nowrap;
 }
 .btn:active { transform: scale(0.98); }
-.btn-primary {
-  background: var(--accent);
-  color: var(--accent-fg);
-}
-.btn-primary:hover:not(:disabled) { background: var(--accent-hover); }
+.btn-primary { background: #1a1a1e; color: #fff; }
+.btn-primary:hover:not(:disabled) { background: #2f2f3c; }
 .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
-.btn-oauth {
-  background: #fff;
-  color: var(--text);
-  border: 1px solid var(--border);
-}
-.btn-oauth:hover { background: var(--bg-input); }
+.btn-oauth { background: #fff; color: #1a1a1e; border: 1px solid #e8e8f0; }
+.btn-oauth:hover { background: #f5f5f9; }
 .btn-oauth i { font-size: 16px; }
-.btn-ghost {
-  background: transparent;
-  color: var(--text);
-  border: 1px solid var(--border);
-}
-.btn-ghost:hover { background: var(--bg-input); }
+.btn-ghost { background: transparent; color: #1a1a1e; border: 1px solid #e8e8f0; }
+.btn-ghost:hover { background: #f5f5f9; }
 .btn-block { width: 100%; }
 
-/* ============================================================
-   DIVIDER
-   ============================================================ */
 .auth-divider {
   display: flex; align-items: center; gap: 12px;
-  margin: 20px 0;
-  color: var(--text-3);
-  font-size: 12px;
+  margin: 20px 0; color: #9b9ba8; font-size: 12px;
 }
-.auth-divider::before,
-.auth-divider::after {
-  content: ''; flex: 1; height: 1px;
-  background: var(--border);
+.auth-divider::before, .auth-divider::after {
+  content: ''; flex: 1; height: 1px; background: #e8e8f0;
 }
-
-/* ============================================================
-   OAUTH
-   ============================================================ */
-.auth-oauth {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-/* ============================================================
-   FINEPRINT
-   ============================================================ */
+.auth-oauth { display: flex; flex-direction: column; gap: 10px; }
 .auth-fineprint {
-  text-align: center;
-  font-size: 12px;
-  color: var(--text-3);
-  margin-top: 20px;
-  line-height: 1.5;
+  text-align: center; font-size: 12px; color: #9b9ba8;
+  margin-top: 20px; line-height: 1.5;
 }
-.auth-fineprint a { color: var(--text-2); font-weight: 600; }
-.auth-fineprint a:hover { color: var(--text); }
+.auth-fineprint a { color: #6b6b78; font-weight: 600; }
+.auth-fineprint a:hover { color: #1a1a1e; }
 
-/* ============================================================
-   RESPONSIVE
-   ============================================================ */
 @media (max-width: 900px) {
   .auth-aside { display: none; }
   .auth-main { padding: 24px; }
   .brand-icon.mobile-only { display: flex; }
-}
-@media (max-width: 480px) {
-  .auth-card-head h2 { font-size: 22px; }
 }
 </style>
 </head>
 <body>
 
 <div class="auth-screen">
-
-  <!-- Left decorative panel -->
   <aside class="auth-aside">
     <div class="auth-aside-inner">
       <div class="auth-brand">
@@ -335,50 +145,41 @@ a { color: inherit; text-decoration: none; }
     </div>
   </aside>
 
-  <!-- Right form -->
   <main class="auth-main">
     <div class="auth-card">
-
       <div class="auth-card-head">
         <div class="brand-icon mobile-only"><i class="fa-solid fa-bolt"></i></div>
         <h2>Welcome back</h2>
         <p>Sign in to continue to NEXGPT</p>
       </div>
 
-      <div class="auth-tabs" role="tablist">
-        <button type="button" class="auth-tab active" role="tab" aria-selected="true">Sign in</button>
-        <a href="./signup.html" class="auth-tab" role="tab" aria-selected="false" style="text-align:center;display:flex;align-items:center;justify-content:center">Sign up</a>
+      <div class="auth-tabs">
+        <button type="button" class="auth-tab active">Sign in</button>
+        <a href="/signup" class="auth-tab">Sign up</a>
       </div>
 
-      <div id="authError" class="auth-error hidden" role="alert"></div>
+      <div id="authError" class="auth-error hidden"></div>
 
-      <form id="signinForm" class="auth-form" autocomplete="on">
+      <form id="signinForm" class="auth-form">
         <label class="field">
           <span class="field-label">Email</span>
           <div class="field-input">
             <i class="fa-regular fa-envelope"></i>
-            <input type="email" id="signinEmail" name="email" placeholder="you@example.com" autocomplete="email" required />
+            <input type="email" id="signinEmail" placeholder="you@example.com" autocomplete="email" required />
           </div>
         </label>
-
         <label class="field">
           <span class="field-label">Password</span>
           <div class="field-input">
             <i class="fa-solid fa-lock"></i>
-            <input type="password" id="signinPassword" name="password" placeholder="Your password" autocomplete="current-password" required />
-            <button type="button" class="field-eye" data-eye="signinPassword" aria-label="Toggle password visibility">
-              <i class="fa-regular fa-eye"></i>
-            </button>
+            <input type="password" id="signinPassword" placeholder="Your password" autocomplete="current-password" required />
+            <button type="button" class="field-eye" data-eye="signinPassword"><i class="fa-regular fa-eye"></i></button>
           </div>
         </label>
-
         <div class="auth-form-row">
           <button type="button" id="forgotPasswordBtn" class="link-btn">Forgot password?</button>
         </div>
-
-        <button type="submit" class="btn btn-primary btn-block" id="signinSubmit">
-          <span>Sign in</span>
-        </button>
+        <button type="submit" class="btn btn-primary btn-block" id="signinSubmit">Sign in</button>
       </form>
 
       <div class="auth-divider"><span>or</span></div>
@@ -395,153 +196,117 @@ a { color: inherit; text-decoration: none; }
       </div>
 
       <p class="auth-fineprint">
-        No account?
-        <a href="./signup.html">Create one free</a>.
-        <br>
-        Guests get 20 messages and Llama&nbsp;3.3&nbsp;70B only.
+        No account? <a href="./signup.html">Create one free</a>.<br>
+        Guests get 20 messages and Llama 3.3 70B only.
       </p>
-
     </div>
   </main>
-
 </div>
 
 <script type="module">
-  // ============================================================
-  // NEXGPT — Login page
-  // ============================================================
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
+import {
+  getAuth, onAuthStateChanged, signInWithEmailAndPassword,
+  signInWithPopup, GoogleAuthProvider, signInAnonymously,
+  sendPasswordResetEmail
+} from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
 
-  import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
-  import {
-    getAuth,
-    onAuthStateChanged,
-    signInWithEmailAndPassword,
-    signInWithPopup,
-    GoogleAuthProvider,
-    signInAnonymously,
-    sendPasswordResetEmail
-  } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
+const firebaseConfig = {
+  apiKey: "AIzaSyAcg4uh4lqOJ8pwUDmDppyyrmOB9Mv4YZA",
+  authDomain: "nexgpt-8249a.firebaseapp.com",
+  projectId: "nexgpt-8249a",
+  storageBucket: "nexgpt-8249a.firebasestorage.app",
+  messagingSenderId: "619126243121",
+  appId: "1:619126243121:web:47c46e57498d67ff107a10"
+};
 
-  const firebaseConfig = {
-    apiKey:            import.meta.env.VITE_FIREBASE_API_KEY,
-    authDomain:        import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
-    projectId:         import.meta.env.VITE_FIREBASE_PROJECT_ID,
-    storageBucket:     import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
-    messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
-    appId:             import.meta.env.VITE_FIREBASE_APP_ID
+const auth = getAuth(initializeApp(firebaseConfig));
+const googleProvider = new GoogleAuthProvider();
+
+const $ = (id) => document.getElementById(id);
+const errorBox = $('authError');
+
+onAuthStateChanged(auth, (user) => { if (user) window.location.replace('./chat.html'); });
+
+function showError(msg, kind = 'error') {
+  if (!msg) { errorBox.classList.add('hidden'); errorBox.textContent = ''; return; }
+  errorBox.textContent = msg;
+  errorBox.classList.remove('hidden');
+  errorBox.classList.toggle('success', kind === 'success');
+}
+
+function friendlyAuthError(code, fallback) {
+  const map = {
+    'auth/invalid-email': 'That email address looks invalid.',
+    'auth/user-not-found': 'No account with that email.',
+    'auth/wrong-password': 'Wrong password.',
+    'auth/invalid-credential': 'Wrong email or password.',
+    'auth/too-many-requests': 'Too many attempts. Try again later.',
+    'auth/network-request-failed': 'Network error. Check your connection.',
+    'auth/popup-closed-by-user': 'Google sign-in was cancelled.',
+    'auth/popup-blocked': 'Popup blocked. Allow popups and try again.',
+    'auth/operation-not-allowed': 'This sign-in method is not enabled in Firebase.'
   };
+  return map[code] || fallback || 'Something went wrong.';
+}
 
-  const app = initializeApp(firebaseConfig);
-  const auth = getAuth(app);
-  const googleProvider = new GoogleAuthProvider();
-
-  // ---- DOM ----
-  const $ = (id) => document.getElementById(id);
-  const errorBox = $('authError');
-  const signinForm = $('signinForm');
-  const signinSubmit = $('signinSubmit');
-
-  // ---- Redirect if already signed in ----
-  onAuthStateChanged(auth, (user) => {
-    if (user) window.location.replace('./chat.html');
+document.querySelectorAll('.field-eye').forEach((btn) => {
+  btn.addEventListener('click', () => {
+    const input = document.getElementById(btn.dataset.eye);
+    if (!input) return;
+    const showing = input.type === 'text';
+    input.type = showing ? 'password' : 'text';
+    btn.querySelector('i').className = showing ? 'fa-regular fa-eye' : 'fa-regular fa-eye-slash';
   });
+});
 
-  // ---- Helpers ----
-  function showError(msg) {
-    if (!msg) {
-      errorBox.classList.add('hidden');
-      errorBox.textContent = '';
-      return;
-    }
-    errorBox.textContent = msg;
-    errorBox.classList.remove('hidden');
+$('signinForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  showError('');
+  const email = $('signinEmail').value.trim();
+  const password = $('signinPassword').value;
+  if (!email || !password) return showError('Fill in both fields.');
+  $('signinSubmit').disabled = true;
+  try {
+    await signInWithEmailAndPassword(auth, email, password);
+    window.location.replace('/chat');
+  } catch (err) {
+    showError(friendlyAuthError(err.code, err.message));
+    $('signinSubmit').disabled = false;
   }
+});
 
-  function friendlyAuthError(code, fallback) {
-    const map = {
-      'auth/invalid-email':            'That email address looks invalid.',
-      'auth/user-not-found':           'No account with that email.',
-      'auth/wrong-password':           'Wrong password.',
-      'auth/invalid-credential':       'Wrong email or password.',
-      'auth/too-many-requests':        'Too many attempts. Try again later.',
-      'auth/network-request-failed':   'Network error. Check your connection.',
-      'auth/popup-closed-by-user':     'Google sign-in was cancelled.',
-      'auth/popup-blocked':            'Popup blocked. Allow popups and try again.',
-      'auth/operation-not-allowed':    'This sign-in method is not enabled in Firebase.'
-    };
-    return map[code] || fallback || 'Something went wrong. Try again.';
+$('googleSigninBtn').addEventListener('click', async () => {
+  showError('');
+  try {
+    await signInWithPopup(auth, googleProvider);
+    window.location.replace('/chat');
+  } catch (err) {
+    showError(friendlyAuthError(err.code, err.message));
   }
+});
 
-  // ---- Password visibility toggle ----
-  document.querySelectorAll('.field-eye').forEach((btn) => {
-    btn.addEventListener('click', () => {
-      const input = document.getElementById(btn.dataset.eye);
-      if (!input) return;
-      const showing = input.type === 'text';
-      input.type = showing ? 'password' : 'text';
-      const icon = btn.querySelector('i');
-      icon.className = showing ? 'fa-regular fa-eye' : 'fa-regular fa-eye-slash';
-    });
-  });
+$('guestBtn').addEventListener('click', async () => {
+  showError('');
+  try {
+    await signInAnonymously(auth);
+    window.location.replace('/chat');
+  } catch (err) {
+    showError(friendlyAuthError(err.code, err.message));
+  }
+});
 
-  // ---- Sign in with email/password ----
-  signinForm.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    showError('');
-    const email = $('signinEmail').value.trim();
-    const password = $('signinPassword').value;
-    if (!email || !password) return showError('Fill in both fields.');
-
-    signinSubmit.disabled = true;
-    try {
-      await signInWithEmailAndPassword(auth, email, password);
-      window.location.replace('./chat.html');
-    } catch (err) {
-      showError(friendlyAuthError(err.code, err.message));
-      signinSubmit.disabled = false;
-    }
-  });
-
-  // ---- Google sign in ----
-  $('googleSigninBtn').addEventListener('click', async () => {
-    showError('');
-    try {
-      await signInWithPopup(auth, googleProvider);
-      window.location.replace('./chat.html');
-    } catch (err) {
-      showError(friendlyAuthError(err.code, err.message));
-    }
-  });
-
-  // ---- Continue as guest ----
-  $('guestBtn').addEventListener('click', async () => {
-    showError('');
-    try {
-      await signInAnonymously(auth);
-      window.location.replace('./chat.html');
-    } catch (err) {
-      showError(friendlyAuthError(err.code, err.message));
-    }
-  });
-
-  // ---- Forgot password ----
-  $('forgotPasswordBtn').addEventListener('click', async () => {
-    showError('');
-    const email = $('signinEmail').value.trim();
-    if (!email) return showError('Enter your email first, then click Forgot password.');
-    try {
-      await sendPasswordResetEmail(auth, email);
-      showError(''); // clear
-      const box = errorBox;
-      box.style.background = '#ecfdf5';
-      box.style.borderColor = '#a7f3d0';
-      box.style.color = '#047857';
-      box.textContent = 'Password reset email sent. Check your inbox.';
-      box.classList.remove('hidden');
-    } catch (err) {
-      showError(friendlyAuthError(err.code, err.message));
-    }
-  });
+$('forgotPasswordBtn').addEventListener('click', async () => {
+  showError('');
+  const email = $('signinEmail').value.trim();
+  if (!email) return showError('Enter your email first, then click Forgot password.');
+  try {
+    await sendPasswordResetEmail(auth, email);
+    showError('Password reset email sent. Check your inbox.', 'success');
+  } catch (err) {
+    showError(friendlyAuthError(err.code, err.message));
+  }
+});
 </script>
 </body>
 </html>
