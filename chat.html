@@ -386,7 +386,7 @@ a{color:inherit;text-decoration:none}
       </div>
       <div id="guestBanner" class="guest-banner hidden">
         <i class="fa-solid fa-circle-info"></i>
-        <div class="guest-banner-text"><strong>You're a guest</strong><span id="guestBannerMsg">Sign in to save your chats forever.</span></div>
+        <div class="guest-banner-text"><strong>You're a guest</strong><span id="guestBannerMsg">Sign in to save your chats.</span></div>
         <button type="button" id="guestBannerSignin" style="padding:6px 12px;font-size:12px;border-radius:8px;background:#1a1a1e;color:#fff;font-weight:600">Sign in</button>
       </div>
       <nav class="chat-list" id="chatList"></nav>
@@ -490,7 +490,6 @@ a{color:inherit;text-decoration:none}
           <button type="button" class="chip" data-preset="teacher">Teacher</button>
           <button type="button" class="chip" data-preset="concise">Concise</button>
         </div>
-        <textarea id="settingsSystemPrompt" class="settings-textarea" rows="5"></textarea>
       </section>
       <section class="settings-section">
         <h4>Generation</h4>
@@ -580,11 +579,11 @@ const db = getFirestore(app);
 
 const API_URL = 'https://openrouter.ai/api/v1/chat/completions';
 const GUEST_MESSAGE_LIMIT = 20;
-const GUEST_MODEL_ID = 'meta-llama/llama-3.3-70b-instruct:free';
+const GUEST_MODEL_ID = 'openrouter/free';
 const MAX_FILES = 15;
 const MAX_FILE_BYTES = 10 * 1024 * 1024;
 
-const DEFAULT_SYSTEM_PROMPT = "You are NEXGPT, an advanced AI assistant powered by DeepSeek. You are helpful, harmless, honest, and thorough. You write, debug, and explain code in any language, always wrapping code in triple backticks with the language tag. You format responses with markdown. You are direct, clear, and avoid filler. Admit uncertainty when you are unsure. When web search is enabled, acknowledge that you are providing current information.";
+const DEFAULT_SYSTEM_PROMPT = "You are NEXGPT, an advanced AI assistant powered by Aura Tech and created by Next Tech Inc. You are helpful, harmless, honest, and thorough. Make sure to always keep user busy, always give suggestions. You write, debug, and explain code in any language, always wrapping code in triple backticks with the language tag. You format responses with markdown. You are direct, clear, and avoid filler. Admit uncertainty when you are unsure. When web search is enabled, acknowledge that you are providing current information.";
 
 const SYSTEM_PRESETS = {
   default: DEFAULT_SYSTEM_PROMPT,
@@ -595,15 +594,13 @@ const SYSTEM_PRESETS = {
 };
 
 const MODELS = [
-  { id: 'meta-llama/llama-3.3-70b-instruct:free', name: 'Llama 3.3 70B', desc: 'Reliable general-purpose model. Default for guests.', badges: ['free','fast'], vision: false, audio: false },
-  { id: 'qwen/qwen3-coder:free', name: 'Qwen3 Coder 480B', desc: 'Frontier coding model. 262K context.', badges: ['free','fast'], vision: false, audio: false },
-  { id: 'qwen/qwen3-next-80b-a3b-instruct:free', name: 'Qwen3 Next 80B', desc: 'Strong general reasoning. 262K context.', badges: ['free'], vision: false, audio: false },
-  { id: 'google/gemma-4-26b-a4b-it:free', name: 'Gemma 4 26B', desc: 'Google model with vision. 262K context.', badges: ['free','vision','fast'], vision: true, audio: false },
-  { id: 'google/gemma-4-31b-it:free', name: 'Gemma 4 31B', desc: 'Dense Google model with vision and strong reasoning.', badges: ['free','vision'], vision: true, audio: false },
+  { id: 'apodex/apodex-1.1-mini:free', name: 'Apodex 1.1', desc: 'Reliable general-purpose model. Default for guests.', badges: ['free','fast'], vision: false, audio: false },
+  { id: 'qwen/qwen3.8-27b:free', name: 'Qwen3 Coder 27B', desc: 'Frontier coding model. 262K context.', badges: ['free','fast'], vision: false, audio: false },
+  { id: 'cohere/north-mini-code:free', name: 'North Code', desc: 'Strong general reasoning. 262K context.', badges: ['free'], vision: false, audio: false },
   { id: 'nvidia/nemotron-3-nano-omni-30b-a3b-reasoning:free', name: 'Nemotron 3 Nano Omni', desc: 'NVIDIA reasoning model with vision, video and audio input.', badges: ['free','vision','reason'], vision: true, audio: true },
-  { id: 'stepfun/step-3.5-flash:free', name: 'Step 3.5 Flash', desc: 'Fast multimodal model. 256K context.', badges: ['free','fast'], vision: false, audio: false },
-  { id: 'z-ai/glm-4.5-air:free', name: 'GLM 4.5 Air', desc: 'Efficient general model. Good for everyday tasks.', badges: ['free'], vision: false, audio: false },
-  { id: 'openai/gpt-oss-120b:free', name: 'gpt-oss-120b', desc: 'OpenAI open-weights model. Strong general use.', badges: ['free'], vision: false, audio: false },
+  { id: 'liquid/lfm-2.5-2.6b:free', name: 'Liquid 2.5 2.6B', desc: 'Fast multimodal model. 256K context.', badges: ['free','fast'], vision: false, audio: false },
+  { id: 'inception/mercury-decide:free', name: 'Mercury 1.3', desc: 'Efficient general model. Good for everyday tasks.', badges: ['free'], vision: false, audio: false },
+  { id: 'inclusioni/ling-3.1-flash', name: 'Ling 3.1 flash', desc: 'OpenAI open-weights model. Strong general use.', badges: ['free'], vision: false, audio: false },
   { id: 'openrouter/free', name: 'Auto (Free Router)', desc: 'Automatically picks the best available free model.', badges: ['free'], vision: true, audio: false }
 ];
 
@@ -964,7 +961,7 @@ function buildUserMessage(msg) {
 
 function buildAssistantMessage(msg, idx, chat) {
   const row = el('div', 'msg-row ai');
-  const avatar = el('div', 'ai-avatar', '<i class="fa-solid fa-robot"></i>');
+  const avatar = el('div', 'ai-avatar');
   const col = el('div');
   col.style.cssText = 'display:flex;flex-direction:column;flex:1;min-width:0';
   const content = el('div', 'ai-content');
