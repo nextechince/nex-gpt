@@ -8,53 +8,24 @@
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
   html, body {
-    height: 100%;
-    width: 100%;
+    height: 100%; width: 100%;
     overflow: hidden;
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     background: #ffffff;
     color: #1a1a1e;
-  }
-  body {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: #ffffff;
-  }
-  .splash {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 20px;
-    animation: fadeIn .35s ease;
-  }
-  .splash-logo {
-    width: 68px; height: 68px;
-    border-radius: 20px;
-    background: #1a1a1e;
-    color: #fff;
     display: flex; align-items: center; justify-content: center;
-    font-size: 30px;
   }
-  .splash-title {
-    font-size: 24px;
-    font-weight: 700;
-    letter-spacing: -0.5px;
+  .splash { display: flex; flex-direction: column; align-items: center; gap: 20px; }
+  .splash-logo {
+    width: 68px; height: 68px; border-radius: 20px;
+    background: #1a1a1e; color: #fff;
+    display: flex; align-items: center; justify-content: center; font-size: 30px;
   }
-  .splash-sub {
-    font-size: 13px;
-    color: #9b9ba8;
-    letter-spacing: -0.1px;
-  }
-  .splash-loader {
-    display: flex;
-    gap: 6px;
-    margin-top: 8px;
-  }
+  .splash-title { font-size: 24px; font-weight: 700; letter-spacing: -0.5px; }
+  .splash-sub { font-size: 13px; color: #9b9ba8; }
+  .splash-loader { display: flex; gap: 6px; margin-top: 8px; }
   .splash-loader span {
-    width: 8px; height: 8px;
-    border-radius: 50%;
-    background: #9b9ba8;
+    width: 8px; height: 8px; border-radius: 50%; background: #9b9ba8;
     animation: blink 1.2s infinite both;
   }
   .splash-loader span:nth-child(2) { animation-delay: .15s; }
@@ -63,111 +34,57 @@
     0%, 80%, 100% { opacity: .3; transform: scale(.85); }
     40% { opacity: 1; transform: scale(1); }
   }
-  @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(4px); }
-    to   { opacity: 1; transform: translateY(0); }
-  }
   .error {
-    max-width: 380px;
-    padding: 20px;
-    border-radius: 12px;
-    border: 1px solid #fecaca;
-    background: #fef2f2;
-    color: #991b1b;
-    font-size: 14px;
-    line-height: 1.55;
-    text-align: center;
+    max-width: 380px; padding: 20px; border-radius: 12px;
+    border: 1px solid #fecaca; background: #fef2f2; color: #991b1b;
+    font-size: 14px; line-height: 1.55; text-align: center;
   }
-  .error h2 {
-    font-size: 16px;
-    margin-bottom: 8px;
-    font-weight: 700;
-  }
-  .error code {
-    font-family: ui-monospace, 'SF Mono', Consolas, monospace;
-    font-size: 12.5px;
-    background: rgba(0,0,0,.05);
-    padding: 1px 5px;
-    border-radius: 4px;
-  }
+  .error h2 { font-size: 16px; margin-bottom: 8px; }
 </style>
 </head>
 <body>
 
-<div id="splash" class="splash">
+<div class="splash">
   <div class="splash-logo">
-    <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
-      <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" fill="currentColor" stroke="none"/>
+    <svg width="30" height="30" viewBox="0 0 24 24" fill="currentColor">
+      <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
     </svg>
   </div>
   <div class="splash-title">NEXGPT</div>
-  <div class="splash-sub">Advanced Ai Model…</div>
+  <div class="splash-sub">ɴᴇxᴛ ɢᴇɴᴇʀᴀᴛɪᴏɴ ᴀɪ ᴘʟᴀᴛғᴏʀᴍ</div>
   <div class="splash-loader"><span></span><span></span><span></span></div>
 </div>
 
 <script type="module">
-  // ============================================================
-  // NEXGPT — Router
-  // Checks Firebase auth state and redirects the user:
-  //   - signed in (any kind, incl. anonymous) → chat.html
-  //   - signed out                            → login.html
-  // ============================================================
-
   import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
   import { getAuth, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
 
-  // ---- Firebase config from Vite env vars ----
+  // ============================================================
+  // HARDCODED FIREBASE CONFIG
+  // ============================================================
   const firebaseConfig = {
-    apiKey:            import.meta.env.VITE_FIREBASE_API_KEY,
-    authDomain:        import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
-    projectId:         import.meta.env.VITE_FIREBASE_PROJECT_ID,
-    storageBucket:     import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
-    messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
-    appId:             import.meta.env.VITE_FIREBASE_APP_ID
+    apiKey: "AIzaSyAcg4uh4lqOJ8pwUDmDppyyrmOB9Mv4YZA",
+    authDomain: "nexgpt-8249a.firebaseapp.com",
+    projectId: "nexgpt-8249a",
+    storageBucket: "nexgpt-8249a.firebasestorage.app",
+    messagingSenderId: "619126243121",
+    appId: "1:619126243121:web:47c46e57498d67ff107a10"
   };
 
-  function showError(html) {
-    document.body.innerHTML = `<div class="error">${html}</div>`;
-  }
-
-  // Validate env
-  const missing = Object.entries(firebaseConfig)
-    .filter(([, v]) => !v)
-    .map(([k]) => k);
-
-  if (missing.length) {
-    showError(`
-      <h2>Missing Firebase config</h2>
-      <p>These env vars are not set:</p>
-      <p style="margin-top:8px">${missing.map(m => `<code>VITE_FIREBASE_${m.replace(/([A-Z])/g, '_$1').toUpperCase()}</code>`).join('<br>')}</p>
-      <p style="margin-top:12px">Add them to <code>.env</code> locally and to Vercel → Settings → Environment Variables, then redeploy.</p>
-    `);
-    throw new Error('Missing env: ' + missing.join(', '));
-  }
-
-  // Initialize Firebase once
   const app = initializeApp(firebaseConfig);
   const auth = getAuth(app);
 
-  // Router
   let redirected = false;
   onAuthStateChanged(auth, (user) => {
     if (redirected) return;
     redirected = true;
-    if (user) {
-      // Signed in — including anonymous guests
-      window.location.replace('./chat.html');
-    } else {
-      // Signed out
-      window.location.replace('./login.html');
-    }
+    window.location.replace(user ? '/chat' : '/login');
   });
 
-  // Safety net: if Firebase no respond in 6s, push to login
   setTimeout(() => {
     if (!redirected) {
       redirected = true;
-      window.location.replace('./login.html');
+      window.location.replace('/login');
     }
   }, 6000);
 </script>
