@@ -1,0 +1,35 @@
+{
+  "name": "NEXGPT — AI Assistant",
+  "short_name": "NEXGPT",
+  "description": "Free AI assistant with chat, vision and voice.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#ffffff",
+  "theme_color": "#1a1a1e",
+  "categories": ["productivity", "utilities"],
+  "lang": "en",
+  "icons": [
+    {
+      "src": "/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "New chat",
+      "short_name": "New chat",
+      "url": "/chat?new=1",
+      "description": "Start a new conversation"
+    }
+  ]
+}
